@@ -6,14 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2020 | SolarBear251的博客</title>
+  <title>LumiEngine开发笔记 - D3D初探 | SolarBear251的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="SolarBear251的博客">
-<meta property="og:url" content="http://yoursite.com/archives/2020/index.html">
+  <meta name="description" content="本系列为自己在引擎开发过程中的学习笔记。引擎的实现基于UWA课程 https:&#x2F;&#x2F;edu.uwa4d.com&#x2F;course-intro&#x2F;0&#x2F;164 ，该课程是知乎专栏《从零开始手敲次世代游戏引擎》系列文章的作者在UWA学堂上发布的整理汇总，知乎专栏原地址 https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;28589792">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LumiEngine开发笔记 - D3D初探">
+<meta property="og:url" content="http://yoursite.com/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/index.html">
 <meta property="og:site_name" content="SolarBear251的博客">
+<meta property="og:description" content="本系列为自己在引擎开发过程中的学习笔记。引擎的实现基于UWA课程 https:&#x2F;&#x2F;edu.uwa4d.com&#x2F;course-intro&#x2F;0&#x2F;164 ，该课程是知乎专栏《从零开始手敲次世代游戏引擎》系列文章的作者在UWA学堂上发布的整理汇总，知乎专栏原地址 https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;28589792">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-23T16:34:10.000Z">
+<meta property="article:modified_time" content="2020-06-24T04:11:41.843Z">
 <meta property="article:author" content="SolarBear251">
+<meta property="article:tag" content="Engine">
+<meta property="article:tag" content="Direct3D">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="SolarBear251的博客" type="application/atom+xml">
@@ -146,36 +152,48 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-LumiEngine开发笔记-D3D初探" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/" class="archive-article-date">
-  	<time datetime="2020-06-23T16:34:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-24</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/">LumiEngine开发笔记 - D3D初探</a>
+    <h1 class="article-title" itemprop="name">
+      LumiEngine开发笔记 - D3D初探
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        <!--显示阅读次数-->
+        
+          <br/>
+          <a class="cloud-tie-join-count" href="javascript:void(0);" style="color:gray;font-size:14px;">
+          <span class="icon-sort"></span>
+          <span id="busuanzi_container_page_pv" style="color: rgb(239, 117, 34); font-size: 14px; display: inline;">
+                    👁 <span id="busuanzi_value_page_pv"></span> &nbsp;&nbsp;
+          </span>
+          </a>
+        
+        <!--显示阅读次数完毕-->
+        
+        <a href="/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/" class="archive-article-date">
+  	<time datetime="2020-06-23T16:34:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>本系列为自己在引擎开发过程中的学习笔记。引擎的实现基于UWA课程 <a href="https://edu.uwa4d.com/course-intro/0/164" target="_blank" rel="noopener">https://edu.uwa4d.com/course-intro/0/164</a> ，该课程是知乎专栏《从零开始手敲次世代游戏引擎》系列文章的作者在UWA学堂上发布的整理汇总，知乎专栏原地址 <a href="https://zhuanlan.zhihu.com/p/28589792" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/28589792</a> </p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -191,7 +209,7 @@
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -204,66 +222,117 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/06/23/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E5%90%AF%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2020-06-23T14:17:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-23</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2020/06/23/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E5%90%AF%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">LumiEngine开发笔记 - 启程</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/06/23/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E5%90%AF%E7%A8%8B/">LumiEngine开发笔记 - 启程</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Engine</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/LumiEngine开发笔记//" class="article-tag-list-link color5">LumiEngine开发笔记</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    暂无目录
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -286,8 +355,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
