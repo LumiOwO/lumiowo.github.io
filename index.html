@@ -173,8 +173,20 @@
       
         <blockquote>
 <p>本系列是我自己在LumiEngine个人引擎开发过程中的学习笔记。引擎的实现基于UWA课程<a href="https://edu.uwa4d.com/course-intro/0/164" target="_blank" rel="noopener">从零开始手敲次世代游戏引擎</a>，该课程是知乎上<a href="https://zhuanlan.zhihu.com/p/28589792" target="_blank" rel="noopener">同名专栏</a>系列文章的作者在UWA学堂上发布的整理汇总。</p>
+<p>LumiEngine项目的github地址： <a href="https://github.com/SolarBear251/LumiEngine" target="_blank" rel="noopener">https://github.com/SolarBear251/LumiEngine</a> </p>
 </blockquote>
+<p>这部分的内容被课程作者成为“支线任务”，因为这部分代码并不会成为我们引擎的一部分。但是，对于现代的图形接口，包括Direct3D、OpenGL等，对他们的学习了解是非常有必要的。况且我目前对渲染管线的部分细节了解的还不是特别清楚，对OpenGL的了解也仅限于图形学课上用的古老的glut库，所以这部分支线任务还是要认真对待一下。</p>
+<p>之后我会对渲染管线的内容再系统地学习一下，然后写一篇文章记录下来。这篇文章中，我们先来看一看Direct3D相关。</p>
+<p>另外，我个人觉得，既然是跟着别人的教程自己实现，就千万不要Ctrl+C, Ctrl+V直接拷贝过来用，宁愿一个字一个字照原样手敲一遍。因为在手敲的过程中会有很充足的时间思考这一行究竟在干什么，而直接复制粘贴过来以后很多细节自己就根本不会注意了。</p>
+<h2 id="D2D"><a href="#D2D" class="headerlink" title="D2D"></a>D2D</h2><p>课程首先展示的是Direct2D API的使用。</p>
+<p>首先，定义4个全局变量：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ID2D1Factory            *pFactory = <span class="literal">nullptr</span>;</span><br><span class="line">ID2D1HwndRenderTarget   *pRenderTarget = <span class="literal">nullptr</span>;</span><br><span class="line">ID2D1SolidColorBrush    *pLightSlateGrayBrush = <span class="literal">nullptr</span>;</span><br><span class="line">ID2D1SolidColorBrush    *pCornflowerBlueBrush = <span class="literal">nullptr</span>;</span><br></pre></td></tr></table></figure>
 
+<p>D2D的库是以一种被称为“COM组件”的方式提供的。</p>
+<p>之后需要设计创建画布的函数。D2D为我们封装了很多接口去使用GPU绘图，但是同时我们也少了很多控制的余地。这也是之后DX12所要解决的问题。</p>
+        
+          <a class="article-more-a" href="/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/#more">展开 >></a>
+        
       
 
       
@@ -267,8 +279,16 @@
       
         <blockquote>
 <p>本系列是我自己在LumiEngine个人引擎开发过程中的学习笔记。引擎的实现基于UWA课程<a href="https://edu.uwa4d.com/course-intro/0/164" target="_blank" rel="noopener">从零开始手敲次世代游戏引擎</a>，该课程是知乎上<a href="https://zhuanlan.zhihu.com/p/28589792" target="_blank" rel="noopener">同名专栏</a>系列文章的作者在UWA学堂上发布的整理汇总。</p>
+<p>LumiEngine项目的github地址： <a href="https://github.com/SolarBear251/LumiEngine" target="_blank" rel="noopener">https://github.com/SolarBear251/LumiEngine</a> </p>
 </blockquote>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h2 id="跨平台架构"><a href="#跨平台架构" class="headerlink" title="跨平台架构"></a>跨平台架构</h2><h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在导师的实验室里做引擎相关的工作时，很多流程都是一知半解的，硬啃教材和课程又很难理解，所以一直都很想从头开始搭建一个与当前最新的架构类似的渲染引擎。所谓实践出真知，自己把相关原理实现一遍以后，对技术的理解程度会透彻很多。</p>
+<p>机缘巧合，在UWA学堂上看到了《从零开始手敲次世代游戏引擎》这门课程，决定跟着大佬的教程一步步把自己的引擎搭起来。粗略地浏览了一下这个专栏，感觉作者真的特别强，而且目前这个专栏仍在持续更新，希望自己能从中学到一些作者的工程思维和能力吧233 </p>
+<p>当前的目标是尽量能追上作者发布的新内容，并在引擎逐渐完善之后加入一些自己的内容。</p>
+<h2 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h2><p>这篇专栏课程最吸引我的地方，除了可以学到渲染技术之外，就是作者一开始就强调的“跨平台”和“性能”。从我刚学编程语言到现在，写出来的代码基本上就没有考虑过这两个东西。</p>
+<p>目前我打算只支持Windows和Linux两个平台作为学习内容，后续如果自己能力足够了再扩展到Mac等平台。</p>
+<h2 id="Clang环境配置-Windows平台"><a href="#Clang环境配置-Windows平台" class="headerlink" title="Clang环境配置 - Windows平台"></a>Clang环境配置 - Windows平台</h2><p>要想支持跨平台，就不能使用Visual Studio进行项目的编译，而是要寻找一个跨平台的工具链。课程中使用的是Clang，因为Clang比较年轻而且现在比较流行。所以，我们需要准备好编译Clang的环境。由于日常使用的环境都是Windows，因此先在Windows平台上配置好Clang工具链。</p>
+        
+          <a class="article-more-a" href="/2020/06/23/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E5%90%AF%E7%A8%8B/#more">展开 >></a>
         
       
 
