@@ -5,18 +5,18 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <link rel="dns-prefetch" href="https://solarbear251.github.io">
-  <title>SolarBear251的博客</title>
+  <link rel="dns-prefetch" href="https://LumiOwO.github.io">
+  <title>Lumi的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="website">
-<meta property="og:title" content="SolarBear251的博客">
-<meta property="og:url" content="https://solarbear251.github.io/index.html">
-<meta property="og:site_name" content="SolarBear251的博客">
+<meta property="og:title" content="Lumi的博客">
+<meta property="og:url" content="https://lumiowo.github.io/index.html">
+<meta property="og:site_name" content="Lumi的博客">
 <meta property="og:locale" content="en_US">
-<meta property="article:author" content="SolarBear251">
+<meta property="article:author" content="Lumi">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternative" href="/atom.xml" title="SolarBear251的博客" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Lumi的博客" type="application/atom+xml">
   
   
     <link rel="icon" href="/assets/favicon.png">
@@ -46,7 +46,7 @@
 			<img src="/assets/avatar.png" class="js-avatar">
 		</a>
 		<hgroup>
-		  <h1 class="header-author"><a href="/">SolarBear251</a></h1>
+		  <h1 class="header-author"><a href="/">Lumi</a></h1>
 		</hgroup>
 		
 		<p class="header-subtitle">热爱游戏的ZJU CS学生</p>
@@ -98,7 +98,7 @@
 				<img src="/assets/avatar.png" class="js-avatar">
 			</div>
 			<hgroup>
-			  <h1 class="header-author js-header-author">SolarBear251</h1>
+			  <h1 class="header-author js-header-author">Lumi</h1>
 			</hgroup>
 			
 			<p class="header-subtitle"><i class="icon icon-quo-left"></i>热爱游戏的ZJU CS学生<i class="icon icon-quo-right"></i></p>
@@ -147,6 +147,123 @@
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-LumiEngine开发笔记-数学库" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/06/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%AD%A6%E5%BA%93/">LumiEngine开发笔记 - 数学库</a>
+    </h1>
+  
+
+        <!--显示阅读次数-->
+        
+        <!--显示阅读次数完毕-->
+        
+        <a href="/2020/07/06/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%AD%A6%E5%BA%93/" class="archive-article-date">
+  	<time datetime="2020-07-06T02:42:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>本系列是我自己在LumiEngine个人引擎开发过程中的学习笔记。引擎的实现基于UWA课程<a href="https://edu.uwa4d.com/course-intro/0/164" target="_blank" rel="noopener">从零开始手敲次世代游戏引擎</a>，该课程是知乎上<a href="https://zhuanlan.zhihu.com/p/28589792" target="_blank" rel="noopener">同名专栏</a>系列文章的作者在UWA学堂上发布的整理汇总。</p>
+<p>LumiEngine项目的github地址： <a href="https://github.com/SolarBear251/LumiEngine" target="_blank" rel="noopener">https://github.com/SolarBear251/LumiEngine</a> </p>
+</blockquote>
+<h2 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h2><p>x64</p>
+<p>顺序！</p>
+<h2 id="ISPC"><a href="#ISPC" class="headerlink" title="ISPC"></a>ISPC</h2><p>Gather and Scatter</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">2&gt;D:&#x2F;111&#x2F;projects&#x2F;LumiEngine&#x2F;core&#x2F;math&#x2F;ispc&#x2F;op_matrix.ispc:33:15: Performance Warning: Gather required to load value.</span><br><span class="line">2&gt;        *p ^&#x3D; *q;</span><br><span class="line">2&gt;              ^^</span><br><span class="line">2&gt;</span><br><span class="line">2&gt;D:&#x2F;111&#x2F;projects&#x2F;LumiEngine&#x2F;core&#x2F;math&#x2F;ispc&#x2F;op_matrix.ispc:33:9: Performance Warning: Gather required to load value.</span><br><span class="line">2&gt;        *p ^&#x3D; *q;</span><br><span class="line">2&gt;        ^^</span><br><span class="line">2&gt;</span><br><span class="line">2&gt;D:&#x2F;111&#x2F;projects&#x2F;LumiEngine&#x2F;core&#x2F;math&#x2F;ispc&#x2F;op_matrix.ispc:33:9: Performance Warning: Scatter required to store value.</span><br><span class="line">2&gt;        *p ^&#x3D; *q;</span><br><span class="line">2&gt;        ^^</span><br><span class="line">2&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Memory reads and writes from the program instances in a gang that access irregular memory locations (rather than a consecutive set of locations, or a single location) can be relatively inefficient. As an example, consider the “simple” array indexing calculation below:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;int i &#x3D; ....;</span><br><span class="line">&gt;uniform float x[10] &#x3D; &#123; ... &#125;;</span><br><span class="line">&gt;float f &#x3D; x[i];</span><br></pre></td></tr></table></figure>
+
+<p>Since the index <code>i</code> is a varying value, the program instances in the gang will in general be reading different locations in the array <code>x</code>. Because not all CPUs have a “gather” instruction, the <code>ispc</code> compiler has to serialize these memory reads, performing a separate memory load for each running program instance, packing the result into <code>f</code>. (The analogous case happens for a write into <code>x[i]</code>.)</p>
+<p>In many cases, gathers like these are unavoidable; the program instances just need to access incoherent memory locations. However, if the array index <code>i</code> actually has the same value for all of the program instances or if it represents an access to a consecutive set of array locations, much more efficient load and store instructions can be generated instead of gathers and scatters, respectively.</p>
+</blockquote>
+<p>operator[] int / size_t</p>
+<h2 id="数学"><a href="#数学" class="headerlink" title="数学"></a>数学</h2><p>矩阵乘法的定义不同，可能会是个坑</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Engine</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Math</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">CMake</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ISPC</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/LumiEngine开发笔记//" class="article-tag-list-link color5">LumiEngine开发笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/07/06/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%AD%A6%E5%BA%93/">Details >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
   
     <article id="post-LumiEngine开发笔记-D3D初探" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -365,7 +482,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 SolarBear251
+    		&copy; 2021 Lumi
     	</div>
       	<!-- <div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -461,6 +578,18 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Engine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Math</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">CMake</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ISPC</a>
               </li>
              
               <li class="article-tag-list-item">

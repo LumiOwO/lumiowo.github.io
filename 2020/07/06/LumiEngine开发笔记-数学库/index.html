@@ -6,14 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://LumiOwO.github.io">
-  <title>Tag: Engine | Lumi的博客</title>
+  <title>LumiEngine开发笔记 - 数学库 | Lumi的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Lumi的博客">
-<meta property="og:url" content="https://lumiowo.github.io/tags/Engine/index.html">
+  <meta name="description" content="本系列是我自己在LumiEngine个人引擎开发过程中的学习笔记。引擎的实现基于UWA课程从零开始手敲次世代游戏引擎，该课程是知乎上同名专栏系列文章的作者在UWA学堂上发布的整理汇总。 LumiEngine项目的github地址： https:&#x2F;&#x2F;github.com&#x2F;SolarBear251&#x2F;LumiEngine   CMakex64 顺序！ ISPCGather and Scatter 12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LumiEngine开发笔记 - 数学库">
+<meta property="og:url" content="https://lumiowo.github.io/2020/07/06/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%AD%A6%E5%BA%93/index.html">
 <meta property="og:site_name" content="Lumi的博客">
+<meta property="og:description" content="本系列是我自己在LumiEngine个人引擎开发过程中的学习笔记。引擎的实现基于UWA课程从零开始手敲次世代游戏引擎，该课程是知乎上同名专栏系列文章的作者在UWA学堂上发布的整理汇总。 LumiEngine项目的github地址： https:&#x2F;&#x2F;github.com&#x2F;SolarBear251&#x2F;LumiEngine   CMakex64 顺序！ ISPCGather and Scatter 12">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-07-06T02:42:16.000Z">
+<meta property="article:modified_time" content="2020-07-06T04:23:14.790Z">
 <meta property="article:author" content="Lumi">
+<meta property="article:tag" content="Engine">
+<meta property="article:tag" content="Math">
+<meta property="article:tag" content="CMake">
+<meta property="article:tag" content="ISPC">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Lumi的博客" type="application/atom+xml">
@@ -146,36 +154,63 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-LumiEngine开发笔记-数学库" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/07/06/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%AD%A6%E5%BA%93/" class="archive-article-date">
-  	<time datetime="2020-07-06T02:42:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-06</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/06/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%AD%A6%E5%BA%93/">LumiEngine开发笔记 - 数学库</a>
+    <h1 class="article-title" itemprop="name">
+      LumiEngine开发笔记 - 数学库
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        <!--显示阅读次数-->
+        
+          <br/>
+          <a class="cloud-tie-join-count" href="javascript:void(0);" style="color:gray;font-size:14px;">
+          <!-- <span class="icon-sort"></span> -->
+          <span id="busuanzi_container_page_pv" style="color: rgb(239, 117, 34); font-size: 14px; display: inline;">
+                    👁 <span id="busuanzi_value_page_pv"></span> &nbsp;&nbsp;
+          </span>
+          </a>
+        
+        <!--显示阅读次数完毕-->
+        
+        <a href="/2020/07/06/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%AD%A6%E5%BA%93/" class="archive-article-date">
+  	<time datetime="2020-07-06T02:42:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>本系列是我自己在LumiEngine个人引擎开发过程中的学习笔记。引擎的实现基于UWA课程<a href="https://edu.uwa4d.com/course-intro/0/164" target="_blank" rel="noopener">从零开始手敲次世代游戏引擎</a>，该课程是知乎上<a href="https://zhuanlan.zhihu.com/p/28589792" target="_blank" rel="noopener">同名专栏</a>系列文章的作者在UWA学堂上发布的整理汇总。</p>
+<p>LumiEngine项目的github地址： <a href="https://github.com/SolarBear251/LumiEngine" target="_blank" rel="noopener">https://github.com/SolarBear251/LumiEngine</a> </p>
+</blockquote>
+<h2 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h2><p>x64</p>
+<p>顺序！</p>
+<h2 id="ISPC"><a href="#ISPC" class="headerlink" title="ISPC"></a>ISPC</h2><p>Gather and Scatter</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">2&gt;D:&#x2F;111&#x2F;projects&#x2F;LumiEngine&#x2F;core&#x2F;math&#x2F;ispc&#x2F;op_matrix.ispc:33:15: Performance Warning: Gather required to load value.</span><br><span class="line">2&gt;        *p ^&#x3D; *q;</span><br><span class="line">2&gt;              ^^</span><br><span class="line">2&gt;</span><br><span class="line">2&gt;D:&#x2F;111&#x2F;projects&#x2F;LumiEngine&#x2F;core&#x2F;math&#x2F;ispc&#x2F;op_matrix.ispc:33:9: Performance Warning: Gather required to load value.</span><br><span class="line">2&gt;        *p ^&#x3D; *q;</span><br><span class="line">2&gt;        ^^</span><br><span class="line">2&gt;</span><br><span class="line">2&gt;D:&#x2F;111&#x2F;projects&#x2F;LumiEngine&#x2F;core&#x2F;math&#x2F;ispc&#x2F;op_matrix.ispc:33:9: Performance Warning: Scatter required to store value.</span><br><span class="line">2&gt;        *p ^&#x3D; *q;</span><br><span class="line">2&gt;        ^^</span><br><span class="line">2&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Memory reads and writes from the program instances in a gang that access irregular memory locations (rather than a consecutive set of locations, or a single location) can be relatively inefficient. As an example, consider the “simple” array indexing calculation below:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;int i &#x3D; ....;</span><br><span class="line">&gt;uniform float x[10] &#x3D; &#123; ... &#125;;</span><br><span class="line">&gt;float f &#x3D; x[i];</span><br></pre></td></tr></table></figure>
+
+<p>Since the index <code>i</code> is a varying value, the program instances in the gang will in general be reading different locations in the array <code>x</code>. Because not all CPUs have a “gather” instruction, the <code>ispc</code> compiler has to serialize these memory reads, performing a separate memory load for each running program instance, packing the result into <code>f</code>. (The analogous case happens for a write into <code>x[i]</code>.)</p>
+<p>In many cases, gathers like these are unavoidable; the program instances just need to access incoherent memory locations. However, if the array index <code>i</code> actually has the same value for all of the program instances or if it represents an access to a consecutive set of array locations, much more efficient load and store instructions can be generated instead of gathers and scatters, respectively.</p>
+</blockquote>
+<p>operator[] int / size_t</p>
+<h2 id="数学"><a href="#数学" class="headerlink" title="数学"></a>数学</h2><p>矩阵乘法的定义不同，可能会是个坑</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -199,7 +234,7 @@
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -212,119 +247,117 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://lumiowo.github.io/2020/07/06/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%AD%A6%E5%BA%93/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/" class="archive-article-date">
-  	<time datetime="2020-06-23T16:34:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-24</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">LumiEngine开发笔记 - D3D初探</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/">LumiEngine开发笔记 - D3D初探</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Engine</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Direct3D</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/LumiEngine开发笔记//" class="article-tag-list-link color5">LumiEngine开发笔记</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CMake"><span class="toc-number">1.</span> <span class="toc-text">CMake</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ISPC"><span class="toc-number">2.</span> <span class="toc-text">ISPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数学"><span class="toc-number">3.</span> <span class="toc-text">数学</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/06/23/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E5%90%AF%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2020-06-23T14:17:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/06/23/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E5%90%AF%E7%A8%8B/">LumiEngine开发笔记 - 启程</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Engine</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/LumiEngine开发笔记//" class="article-tag-list-link color5">LumiEngine开发笔记</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -347,9 +380,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

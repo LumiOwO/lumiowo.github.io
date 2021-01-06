@@ -5,27 +5,27 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <link rel="dns-prefetch" href="https://solarbear251.github.io">
-  <title>LumiEngine开发笔记 - D3D初探 | SolarBear251的博客</title>
+  <link rel="dns-prefetch" href="https://LumiOwO.github.io">
+  <title>LumiEngine开发笔记 - D3D初探 | Lumi的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="本系列是我自己在LumiEngine个人引擎开发过程中的学习笔记。引擎的实现基于UWA课程从零开始手敲次世代游戏引擎，该课程是知乎上同名专栏系列文章的作者在UWA学堂上发布的整理汇总。 LumiEngine项目的github地址： https:&#x2F;&#x2F;github.com&#x2F;SolarBear251&#x2F;LumiEngine   这部分的内容被课程作者成为“支线任务”，因为这部分代码并不会成为我们引擎的一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LumiEngine开发笔记 - D3D初探">
-<meta property="og:url" content="https://solarbear251.github.io/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/index.html">
-<meta property="og:site_name" content="SolarBear251的博客">
+<meta property="og:url" content="https://lumiowo.github.io/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/index.html">
+<meta property="og:site_name" content="Lumi的博客">
 <meta property="og:description" content="本系列是我自己在LumiEngine个人引擎开发过程中的学习笔记。引擎的实现基于UWA课程从零开始手敲次世代游戏引擎，该课程是知乎上同名专栏系列文章的作者在UWA学堂上发布的整理汇总。 LumiEngine项目的github地址： https:&#x2F;&#x2F;github.com&#x2F;SolarBear251&#x2F;LumiEngine   这部分的内容被课程作者成为“支线任务”，因为这部分代码并不会成为我们引擎的一">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://solarbear251.github.io/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/image-20200628124013802.png">
-<meta property="og:image" content="https://solarbear251.github.io/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/image-20200628123951320.png">
+<meta property="og:image" content="https://lumiowo.github.io/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/image-20200628124013802.png">
+<meta property="og:image" content="https://lumiowo.github.io/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/image-20200628123951320.png">
 <meta property="article:published_time" content="2020-06-23T16:34:10.000Z">
 <meta property="article:modified_time" content="2020-06-28T04:40:15.478Z">
-<meta property="article:author" content="SolarBear251">
+<meta property="article:author" content="Lumi">
 <meta property="article:tag" content="Engine">
 <meta property="article:tag" content="Direct3D">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://solarbear251.github.io/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/image-20200628124013802.png">
+<meta name="twitter:image" content="https://lumiowo.github.io/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/image-20200628124013802.png">
   
-    <link rel="alternative" href="/atom.xml" title="SolarBear251的博客" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Lumi的博客" type="application/atom+xml">
   
   
     <link rel="icon" href="/assets/favicon.png">
@@ -55,7 +55,7 @@
 			<img src="/assets/avatar.png" class="js-avatar">
 		</a>
 		<hgroup>
-		  <h1 class="header-author"><a href="/">SolarBear251</a></h1>
+		  <h1 class="header-author"><a href="/">Lumi</a></h1>
 		</hgroup>
 		
 		<p class="header-subtitle">热爱游戏的ZJU CS学生</p>
@@ -107,7 +107,7 @@
 				<img src="/assets/avatar.png" class="js-avatar">
 			</div>
 			<hgroup>
-			  <h1 class="header-author js-header-author">SolarBear251</h1>
+			  <h1 class="header-author js-header-author">Lumi</h1>
 			</hgroup>
 			
 			<p class="header-subtitle"><i class="icon icon-quo-left"></i>热爱游戏的ZJU CS学生<i class="icon icon-quo-right"></i></p>
@@ -323,7 +323,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=https://solarbear251.github.io/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=https://lumiowo.github.io/2020/06/24/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-D3D%E5%88%9D%E6%8E%A2/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -336,6 +336,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2020/07/06/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%AD%A6%E5%BA%93/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          LumiEngine开发笔记 - 数学库
+        
+      </div>
+    </a>
   
   
     <a href="/2020/06/23/LumiEngine%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0-%E5%90%AF%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
@@ -395,7 +404,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 SolarBear251
+    		&copy; 2021 Lumi
     	</div>
       	<!-- <div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -491,6 +500,18 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Engine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Math</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">CMake</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ISPC</a>
               </li>
              
               <li class="article-tag-list-item">
