@@ -16,7 +16,7 @@
 <meta property="og:description" content="对github项目https:&#x2F;&#x2F;github.com&#x2F;ttroy50&#x2F;cmake-examples.git进行学习总结   运行环境 Windows + gcc 4.9.2 + GNUWin32，使用VS Code的CMake Tools插件  1 Out-of-Source Build在构建CMake项目时，一个非常重要的原则是：不要把构建后生成的文件和源代码混在一起！ 一般采取的做法是在">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-01-11T03:11:13.000Z">
-<meta property="article:modified_time" content="2021-01-11T03:12:11.406Z">
+<meta property="article:modified_time" content="2021-01-11T03:17:18.778Z">
 <meta property="article:author" content="Lumi">
 <meta property="article:tag" content="Cmake">
 <meta name="twitter:card" content="summary">
@@ -220,7 +220,7 @@
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_executable</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span> <span class="variable">$&#123;SOURCES&#125;</span>)</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>*<em>Tips: *</em>最新的CMake规范不推荐用一个变量来表示所有的源文件，而是建议直接在<code>add_xxx()</code>函数里声明每一个源文件，例如：</p>
+<p><strong>Tips:</strong> 最新的CMake规范不推荐用一个变量来表示所有的源文件，而是建议直接在<code>add_xxx()</code>函数里声明每一个源文件，例如：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_executable</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span></span><br><span class="line">    src/Hello.cpp</span><br><span class="line">    src/main.cpp</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 </blockquote>
 <h2 id="4-添加头文件所在目录"><a href="#4-添加头文件所在目录" class="headerlink" title="4 添加头文件所在目录"></a>4 添加头文件所在目录</h2><p>很多工程会把所有头文件放在一个单独的include文件夹里。一个可执行文件被看做一个target。使用<code>target_include_directories()</code>函数可以指定target包含的头文件路径，这相当于在编译时加入了<code>-I</code>选项。</p>
@@ -266,7 +266,7 @@
 <td align="center">同上</td>
 </tr>
 <tr>
-<td align="center">&lt;projectname&gt;_SOURCE_DIR</td>
+<td align="center">&lt;ProjectName&gt;_SOURCE_DIR</td>
 <td align="center">同上</td>
 </tr>
 <tr>
@@ -282,7 +282,7 @@
 <td align="center">同上</td>
 </tr>
 <tr>
-<td align="center">&lt;projectname&gt;_BINARY_DIR</td>
+<td align="center">&lt;ProjectName&gt;_BINARY_DIR</td>
 <td align="center">同上</td>
 </tr>
 <tr>
@@ -319,7 +319,7 @@
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加动态库</span></span><br><span class="line"><span class="keyword">add_library</span>(hello_library SHARED </span><br><span class="line">    src/Hello.cpp</span><br><span class="line">)</span><br><span class="line"><span class="keyword">target_include_directories</span>(hello_library</span><br><span class="line">    PUBLIC </span><br><span class="line">    <span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/<span class="keyword">include</span></span><br><span class="line">)</span><br><span class="line"><span class="comment"># 添加可执行文件并链接动态库</span></span><br><span class="line"><span class="keyword">add_executable</span>(hello_binary</span><br><span class="line">    src/main.cpp</span><br><span class="line">)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(hello_binary</span><br><span class="line">    PRIVATE </span><br><span class="line">    hello_library</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>*<em>Tips: *</em> 类似地，在该例中，<code>Hello.h</code>的文件路径如下：</p>
+<p><strong>Tips:</strong> 类似地，在该例中，<code>Hello.h</code>的文件路径如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">├── include</span><br><span class="line">    └── shared</span><br><span class="line">        └── Hello.h</span><br></pre></td></tr></table></figure>
 
 <p>因此在C++中引用<code>Hello.h</code>时，需要写成：</p>
@@ -591,11 +591,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Cmake</a>
+                <a href="javascript:void(0)" class="js-tag color4">Direct3D</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Direct3D</a>
+                <a href="javascript:void(0)" class="js-tag color1">Cmake</a>
               </li>
             
             <div class="clearfix"></div>
