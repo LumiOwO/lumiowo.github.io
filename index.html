@@ -148,6 +148,107 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-【CMake的使用】CMake的一些基本操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/11/%E3%80%90CMake%E7%9A%84%E4%BD%BF%E7%94%A8%E3%80%91CMake%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">【CMake的使用】CMake的一些基本操作</a>
+    </h1>
+  
+
+        <!--显示阅读次数-->
+        
+        <!--显示阅读次数完毕-->
+        
+        <a href="/2021/01/11/%E3%80%90CMake%E7%9A%84%E4%BD%BF%E7%94%A8%E3%80%91CMake%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" class="archive-article-date">
+  	<time datetime="2021-01-11T03:11:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p> 对github项目<a href="https://github.com/ttroy50/cmake-examples.git进行学习总结" target="_blank" rel="noopener">https://github.com/ttroy50/cmake-examples.git进行学习总结</a> </p>
+</blockquote>
+<h2 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h2><p> Windows + gcc 4.9.2 + GNUWin32，使用VS Code的CMake Tools插件 </p>
+<h2 id="1-Out-of-Source-Build"><a href="#1-Out-of-Source-Build" class="headerlink" title="1 Out-of-Source Build"></a>1 Out-of-Source Build</h2><p>在构建CMake项目时，一个非常重要的原则是：不要把构建后生成的文件和源代码混在一起！</p>
+<p>一般采取的做法是在项目根目录下新建一个build目录，然后在build目录中构建Cmake项目。这样如果需要重新构建项目，只需要把build目录删掉再重新构建即可，不会污染原项目的文件结构。</p>
+<p>CMake命令如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">cmake ..    <span class="comment"># 构建CMake项目，生成Makefile文件</span></span><br><span class="line">make        <span class="comment"># 根据Makefile文件生成可执行文件</span></span><br></pre></td></tr></table></figure>
+
+<p>由于我使用gcc编译并且安装了GNUWin32，因此可以使用make命令生成可执行文件。一般在Windows环境下会默认使用Visual Studio的编译器，这样在执行<code>cmake ..</code> 命令后会生成<code>.sln</code>后缀的VS项目，使用Visual Studio打开并构建工程即可。</p>
+<h2 id="2-最简单的情况-——-Hello-CMake"><a href="#2-最简单的情况-——-Hello-CMake" class="headerlink" title="2 最简单的情况 —— Hello CMake"></a>2 最简单的情况 —— Hello CMake</h2><p>如果我们整个工程里面只有一个源文件main.cpp，CMake文件只需要三行即可：</p>
+        
+          <!-- <a class="article-more-a" href="/2021/01/11/%E3%80%90CMake%E7%9A%84%E4%BD%BF%E7%94%A8%E3%80%91CMake%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/#more">文章详情 >></a> -->
+          <a class="article-more-a" href="/2021/01/11/%E3%80%90CMake%E7%9A%84%E4%BD%BF%E7%94%A8%E3%80%91CMake%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">文章详情 >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Cmake</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/CMake的使用//" class="article-tag-list-link color4">CMake的使用</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/01/11/%E3%80%90CMake%E7%9A%84%E4%BD%BF%E7%94%A8%E3%80%91CMake%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">Details >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-LumiEngine开发笔记-重新规划" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -562,6 +663,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Engine</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Cmake</a>
               </li>
              
               <li class="article-tag-list-item">
