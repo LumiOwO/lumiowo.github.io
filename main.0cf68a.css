@@ -412,9 +412,6 @@ a {
   background: transparent;
   text-decoration: none;
   color: #08c;
-  /* 如果超长，自动截断 */
-  word-wrap:break-word;
-  word-break:break-all;
 }
 
 a:active {
@@ -2382,9 +2379,6 @@ pre .id {
   margin-top: 10px;
   border-left: 5px solid #42b983;
   background: #ecf8f2;
-  /* 如果超长，自动截断 */
-  word-wrap:break-word;
-  word-break:break-all;
 }
 
 .article-entry blockquote p {
