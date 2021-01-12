@@ -411,7 +411,10 @@ template {
 a {
   background: transparent;
   text-decoration: none;
-  color: #08c
+  color: #08c;
+  /* 如果超长，自动截断 */
+  word-wrap:break-word;
+  word-break:break-all;
 }
 
 a:active {
@@ -1120,7 +1123,7 @@ html {
 
 .article-entry .highlight,
 .article-entry pre {
-  background: #272822;
+  background: #f4f4f4;
   margin: 10px 0;
   padding: 10px;
   overflow: auto;
@@ -1203,7 +1206,7 @@ html {
 }
 
 .article-entry .highlight .line {
-  color: #fff;
+  color: #43566a;
   min-height: 19px
 }
 
@@ -1263,13 +1266,13 @@ html {
 }
 
 pre .comment {
-  color: #75715e
+  color: #aa5550
 }
 
 pre .class .params,
 pre .function .keyword,
 pre .keyword {
-  color: #66d9ef
+  color: #b93fc9
 }
 
 pre .css .value,
@@ -1277,7 +1280,7 @@ pre .doctype,
 pre .function,
 pre .params,
 pre .tag {
-  color: #fff
+  color: #ff9800
 }
 
 pre .at_rule,
@@ -1286,7 +1289,7 @@ pre .css~* .tag,
 pre .preprocessor,
 pre .preprocessor .keyword,
 pre .title {
-  color: #f92672
+  color: #ff0000
 }
 
 pre .attribute,
@@ -1294,16 +1297,16 @@ pre .built_in,
 pre .class,
 pre .css~* .class,
 pre .function .title {
-  color: #a6e22e
+  color: #0000ff
 }
 
 pre .string,
 pre .value {
-  color: #e6db74
+  color: #22a2cc
 }
 
 pre .number {
-  color: #7163d7
+  color: #f700fe
 }
 
 pre .css~* .id,
@@ -2362,10 +2365,11 @@ pre .id {
 
 .article-entry li code,
 .article-entry p code {
-  padding: 1px 3px;
+  padding: 3px 3px;
   margin: 0 3px;
-  background: #ddd;
-  border: 1px solid #ccc;
+  color: #ea7616;
+  background: #f4f4f4;
+  border: none;
   font-family: Menlo, Monaco, Andale Mono, lucida console, Courier New, monospace;
   word-wrap: break-word;
   font-size: 14px
@@ -2376,8 +2380,11 @@ pre .id {
   border-left: 5px solid #ccc;
   padding: 15px 20px;
   margin-top: 10px;
-  border-left: 5px solid #657b83;
-  background: #f6f6f6
+  border-left: 5px solid #42b983;
+  background: #ecf8f2;
+  /* 如果超长，自动截断 */
+  word-wrap:break-word;
+  word-break:break-all;
 }
 
 .article-entry blockquote p {
@@ -2476,7 +2483,7 @@ pre .id {
   overflow-x: auto;
   color: #657b83;
   border: 1px solid #ccc;
-  text-shadow: 0 1px #444;
+  text-shadow: none;
   font-family: Menlo, Monaco, Andale Mono, lucida console, Courier New, monospace
 }
 
