@@ -119,3 +119,13 @@ slider:
 smart_menu:
   innerArchive: 'Search'
   friends: false
+
+
+#6、Valine https://valine.js.org
+valine: 
+  appid: CPjYQAW8O1gIlWwjS0RYgztp-MdYXbMMI
+  appkey: qx2nP1SRk0lmibninpSUrh5A
+  verify: false #验证码
+  notify: true #评论回复提醒
+  avatar: mp #评论列表头像样式：''/mp/identicon/monsterid/wavatar/retro/hide
+  placeholder: 发条友善的评论吧(^_^) #评论框占位符
