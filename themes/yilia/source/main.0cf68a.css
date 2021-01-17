@@ -1141,9 +1141,17 @@ html {
 }
 
 .article-entry code {
-  background: #eee;
-  padding: 0 .3em;
-  border: none
+  /*background: #eee;*/
+  /*padding: 0 .3em;*/
+  /*border: none*/
+  padding: 3px 3px;
+  margin: 0 3px;
+  color: #ea7616;
+  background: #f4f4f4;
+  border: none;
+  font-family: Menlo, Monaco, Andale Mono, lucida console, Courier New, monospace;
+  word-wrap: break-word;
+  /*font-size: 14px*/
 }
 
 .article-entry pre code {
@@ -2319,8 +2327,8 @@ pre .id {
 }
 
 .article-inner h4 {
-  letter-spacing: .140625em;
-  text-transform: uppercase
+  /*letter-spacing: .140625em;*/
+  /*text-transform: uppercase*/
 }
 
 .article-inner h6 {
@@ -2394,11 +2402,11 @@ pre .id {
   content: "";
   width: 6px;
   height: 6px;
-  border: 1px solid #999;
-  border-radius: 10px;
-  background: #aaa;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  background: #f4f4f4;
   display: inline-block;
-  margin-right: 10px;
+  margin-right: 7px;
   float: left;
   margin-top: 10px
 }
@@ -2478,7 +2486,7 @@ pre .id {
   color: #657b83;
   border: 1px solid #ccc;
   text-shadow: none;
-  font-family: Menlo, Monaco, Andale Mono, lucida console, Courier New, monospace
+  font-family: Consolas, Menlo, Monaco, Andale Mono, lucida console, Microsoft Yahei, 微软雅黑, Courier New, monospace
 }
 
 .article-entry pre code {
@@ -3603,7 +3611,7 @@ pre .id {
   .header-author {
     text-align: center;
     margin: .67em 0;
-    font-family: Roboto, serif;
+    font-family: Helvetica Neue, Roboto, Arial, Calibri, serif;
     font-size: 30px;
     transition: .3s
   }

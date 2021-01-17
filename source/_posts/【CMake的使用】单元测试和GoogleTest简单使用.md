@@ -1,6 +1,6 @@
 ---
 title: 【CMake的使用】单元测试和GoogleTest简单使用
-date: 
+date: 2021-01-17 20:50:43
 tags: [CMake, GoogleTest]
 categories: [CMake的使用]
 ---
@@ -125,9 +125,9 @@ add_subdirectory(thirdparty/googletest)
 这是GoogleTest官方最推荐的方法。事实上，官方的文档中提供了4种方案：
 
 > - **Download the GoogleTest source code manually and place it at a known location.** This is the least flexible approach and can make it more difficult to use with continuous integration systems, etc.
-> - **Embed the GoogleTest source code as a direct copy in the main project's source tree. **This is often the simplest approach, but is also the hardest to keep up to date. Some organizations may not permit this method.
+> - **Embed the GoogleTest source code as a direct copy in the main project's source tree.**This is often the simplest approach, but is also the hardest to keep up to date. Some organizations may not permit this method.
 > - **Add GoogleTest as a git submodule or equivalent.** This may not always be possible or appropriate. Git submodules, for example, have their own set of advantages and drawbacks.
-> - **Use CMake to download GoogleTest as part of the build's configure step. **This is just a little more complex, but doesn't have the limitations of the other methods.
+> - **Use CMake to download GoogleTest as part of the build's configure step.**This is just a little more complex, but doesn't have the limitations of the other methods.
 
 文档中详细介绍了最后一种方案，需要用到CMake脚本来获取GTest项目到本地。该脚本在[GTest项目的Readme文档](https://github.com/google/googletest/blob/master/googletest/README.md)中已给出，如果感兴趣可以研究一下~
 
@@ -211,7 +211,7 @@ Expected equality of these values:
 >
 > 这里我推荐一个VS Code里的可视化插件：[C++ TestMate](https://marketplace.visualstudio.com/items?itemName=matepek.vscode-catch2-test-adapter)，使用该插件运行上面的测试样例，可以得到下面的可视化结果：
 >
-> ![image-20210117170436688](draft/image-20210117170436688.png)
+> ![image-20210117205156858](%E3%80%90CMake%E7%9A%84%E4%BD%BF%E7%94%A8%E3%80%91%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E5%92%8CGoogleTest%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/image-20210117205156858.png)
 
 #### 2.3.2 `ASSERT_*()`和`EXPECT_*()`
 
