@@ -167,4 +167,29 @@
   </section>
   <% } %>
   
+  <% if (theme.twikoo){ %>
+  <section id="comments" class="comments">
+    <style>
+      .comments {
+        margin: 30px;
+        padding: 30px 4% 30px 4%;
+        background: #fff
+      }
+  
+      @media screen and (max-width:800px) {
+        .comments {
+          margin: auto;
+          padding: 30px;
+          background: #fff
+        }
+      }
+    </style>
+    <%- partial('post/twikoo', {
+      key: post.slug,
+      title: post.title,
+      url: config.url+url_for(post.path)
+      }) %>
+  </section>
+  <% } %>
+  
 <% } %>

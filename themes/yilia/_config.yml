@@ -18,7 +18,7 @@ subnav:
   #segmentfault: "#"
   #bilibili: "#"
   #acfun: "#"
-  mail: "mailto:LumiOwO@hotmail.com"
+  mail: "mailto:lumiowo@hotmail.com"
   #facebook: "#"
   #google: "#"
   #twitter: "#"
@@ -122,10 +122,13 @@ smart_menu:
 
 
 #6、Valine https://valine.js.org
-valine: 
-  appid: CPjYQAW8O1gIlWwjS0RYgztp-MdYXbMMI
-  appkey: qx2nP1SRk0lmibninpSUrh5A
-  verify: false #验证码
-  notify: true #评论回复提醒
-  avatar: mp #评论列表头像样式：''/mp/identicon/monsterid/wavatar/retro/hide
-  placeholder: 发条友善的评论吧(^_^) #评论框占位符
+# valine: 
+#   appid: CPjYQAW8O1gIlWwjS0RYgztp-MdYXbMMI
+#   appkey: qx2nP1SRk0lmibninpSUrh5A
+#   verify: false #验证码
+#   notify: true #评论回复提醒
+#   avatar: mp #评论列表头像样式：''/mp/identicon/monsterid/wavatar/retro/hide
+#   placeholder: 发条友善的评论吧(^_^) #评论框占位符
+
+twikoo:
+  envId: lumi-cloudbase-0gqxziw8cd9095c0 #您的环境id
