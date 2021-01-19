@@ -1,12 +1,11 @@
 ---
 title: 【C++11】类型别名和类型推断：typedef、using、auto、decltype
-date: 
+date: 2021-01-19 16:58:04
 tags: [C++]
 categories: [C++11]
 ---
 
 最近在读第5版的《C++ Primer》，发现C++11标准中有很多非常实用的新特性。这里简单总结下C++11标准中处理变量类型的一些特性。
-
 
 ## 1 类型别名
 
@@ -75,7 +74,7 @@ typedef int (*pfunc)(char, double);
 pfunc pf = foo;
 ```
 
-==个人建议：==当你想不明白`typedef`的语法究竟该怎么写时，想一想你是如何定义一个变量的。`typedef`定义类型名的语法和定义一个变量名的语法其实是一样的！
+<mark>个人建议：</mark>当你想不明白`typedef`的语法究竟该怎么写时，想一想你是如何定义一个变量的。`typedef`定义类型名的语法和定义一个变量名的语法其实是一样的！
 
 例如，我现在要定义一个`char*`类型的变量`str`：
 
@@ -136,23 +135,23 @@ auto item = val1 + val2;
 注意`auto`一般会忽略掉`const`属性。如果需要定义常量，需要额外声明为`const`。例如：
 
 ```cpp
-const int c = 1; 	// 常量
+const int c = 1;    // 常量
 
-auto a = c; 		// 变量a，可以修改a的值
-a = 3; 				// 正确
+auto a = c;         // 变量a，可以修改a的值
+a = 3;              // 正确
 
-const auto b = c; 	// 常量b，不能修改b的值
-b = 3;				// 错误
+const auto b = c;   // 常量b，不能修改b的值
+b = 3;              // 错误
 ```
 
-==个人建议：==不要滥用`auto`！！！变量类型还是显式声明出来比较好。
+<mark>个人建议：</mark>不要滥用`auto`！！！变量类型还是显式声明出来比较好。
 
 我一般只在这种情况下使用`auto`：非常明确地知道该变量是什么类型，但是类型名写出来太长了，例如使用迭代器访问STL容器的时候。使用迭代器的循环应该写成：
 
 ```cpp
 std::vector<int> v(10);
 for(std::vector<int>::iterator it = v.begin(); it != v.end(); it++) {
-	/* Do something */
+    /* Do something */
 }
 ```
 
@@ -161,7 +160,7 @@ for(std::vector<int>::iterator it = v.begin(); it != v.end(); it++) {
 ```cpp
 std::vector<int> v(10);
 for(auto it = v.begin(); it != v.end(); it++) {
-	/* Do something */
+    /* Do something */
 }
 ```
 
@@ -175,17 +174,17 @@ decltype(f()) sum = x;
 
 这里变量`sum`的类型由函数`f()`返回的类型决定，但是编译器并不会实际调用函数`f()`。也就是说，在这一条语句中，程序并没有执行过函数`f()`。
 
-==题外话：==与此类似的还有`sizeof()`语句，也是在编译时就能确定一个表达式所占的字节大小，并且表达式不会被执行。
+<mark>题外话：</mark>与此类似的还有`sizeof()`语句，也是在编译时就能确定一个表达式所占的字节大小，并且表达式不会被执行。
 
 需要注意的是，`decltype()`返回的类型和表达式结果的数据类型完全等价，包括引用类型。例如：
 
 ```cpp
-const int c = 0; 		// 类型为const int
-const int &ref = c; 	// 类型为const int&，是c的引用
+const int c = 0;        // 类型为const int
+const int &ref = c;     // 类型为const int&，是c的引用
 
-decltype(c) x = 0; 		// x的类型是const int
-decltype(ref) y = x; 	// y的类型是const int&，绑定到x
-decltype(ref) z; 		// 错误，z是一个引用，必须初始化
+decltype(c) x = 0;      // x的类型是const int
+decltype(ref) y = x;    // y的类型是const int&，绑定到x
+decltype(ref) z;        // 错误，z是一个引用，必须初始化
 ```
 
 使用`decltype()`时有两个特殊情况需要特别注意：
@@ -210,8 +209,8 @@ decltype(*p) b;
 
 ```cpp
 int i;
-decltype((i)) a; 	// 错误，a是int&，必须初始化
-decltype(i) b; 		// 正确
+decltype((i)) a;     // 错误，a是int&，必须初始化
+decltype(i) b;       // 正确
 ```
 
 也就是说，`decltype((var))`的结果永远是引用！

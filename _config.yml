@@ -62,7 +62,7 @@ index_generator:
   order_by: -date
 
 # Category & Tag
-default_category: 未分类
+default_category: uncategorized
 category_map:
 tag_map:
 
