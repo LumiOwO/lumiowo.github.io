@@ -2402,9 +2402,9 @@ pre .id {
   content: "";
   width: 6px;
   height: 6px;
-  border: 1px solid #aaa;
+  border: 1px solid #000;
   border-radius: 8px;
-  background: #f4f4f4;
+  background: #000;
   display: inline-block;
   margin-right: 7px;
   float: left;
@@ -2423,7 +2423,7 @@ pre .id {
 
 .article-entry ol,
 .article-entry ul {
-  font-size: 14px;
+  /* font-size: 14px; */
   margin: 10px 0
 }
 
