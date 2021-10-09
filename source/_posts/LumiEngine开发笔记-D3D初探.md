@@ -7,7 +7,7 @@ categories: [LumiEngine开发笔记]
 
 > 本系列是我自己在LumiEngine个人引擎开发过程中的学习笔记。引擎的实现基于UWA课程[从零开始手敲次世代游戏引擎](https://edu.uwa4d.com/course-intro/0/164)，该课程是知乎上[同名专栏](https://zhuanlan.zhihu.com/p/28589792)系列文章的作者在UWA学堂上发布的整理汇总。
 >
-> LumiEngine项目的github地址： https://github.com/SolarBear251/LumiEngine 
+> LumiEngine项目的github地址： https://github.com/LumiOwO/LumiEngine
 
 这部分的内容被课程作者成为“支线任务”，因为这部分代码并不会成为我们引擎的一部分。但是，对于现代的图形接口，包括Direct3D、OpenGL等，对他们的学习了解是非常有必要的。况且我目前对渲染管线的部分细节了解的还不是特别清楚，对OpenGL的了解也仅限于图形学课上用的古老的glut库，所以这部分支线任务还是要认真对待一下。
 

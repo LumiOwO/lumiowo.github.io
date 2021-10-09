@@ -7,7 +7,7 @@ categories: [LumiEngine开发笔记]
 
 > 本系列是我自己在LumiEngine个人引擎开发过程中的学习笔记。引擎的实现基于UWA课程[从零开始手敲次世代游戏引擎](https://edu.uwa4d.com/course-intro/0/164)，该课程是知乎上[同名专栏](https://zhuanlan.zhihu.com/p/28589792)系列文章的作者在UWA学堂上发布的整理汇总。
 >
-> LumiEngine项目的github地址： https://github.com/SolarBear251/LumiEngine 
+> LumiEngine项目的github地址： https://github.com/LumiOwO/LumiEngine
 
 ## 前言
 
