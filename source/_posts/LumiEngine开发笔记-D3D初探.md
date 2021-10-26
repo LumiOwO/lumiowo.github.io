@@ -1,5 +1,5 @@
 ---
-title: LumiEngine开发笔记 - D3D初探
+title: LumiEngine 开发笔记 - D3D 初探
 date: 2020-06-24 00:34:10
 tags: [Engine, Direct3D]
 categories: [LumiEngine开发笔记]

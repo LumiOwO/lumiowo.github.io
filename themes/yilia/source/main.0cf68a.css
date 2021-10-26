@@ -2219,7 +2219,7 @@ pre .id {
 .article-header {
   border-left: 5px solid #4d4d4d;
   padding: 30px 0 15px 25px;
-  padding-left: 7.6923%
+  padding-left: 7.2%
 }
 
 .article-meta {
@@ -2365,7 +2365,7 @@ pre .id {
 }
 
 .article-entry p {
-  margin-top: 10px
+  /* margin-top: 10px */
 }
 
 .article-entry li code,
@@ -2424,7 +2424,7 @@ pre .id {
 .article-entry ol,
 .article-entry ul {
   /* font-size: 14px; */
-  /* margin: 10px 0 */
+  margin: 5px 0
 }
 
 .article-entry li ol,

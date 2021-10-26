@@ -1,5 +1,5 @@
 ---
-title: 【CMake的使用】单元测试和GoogleTest简单使用
+title: 【CMake的使用】单元测试和 GoogleTest 简单使用
 date: 2021-01-17 20:50:43
 tags: [CMake, GoogleTest]
 categories: [CMake的使用]
