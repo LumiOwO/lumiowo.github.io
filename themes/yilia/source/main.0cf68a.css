@@ -364,7 +364,7 @@ html {
 body {
   margin: 0;
   font-size: 14px;
-  font-family: Helvetica Neue, Helvetica, STHeiTi, Arial, sans-serif;
+  font-family: "Segoe UI", Helvetica Neue, Helvetica, STHeiTi, Arial, sans-serif;
   line-height: 1.5;
   color: #333;
   background-color: #fff;
@@ -871,7 +871,7 @@ textarea {
   color: #1a1a1a;
   /*font-family: lucida grande, lucida sans unicode, lucida, helvetica, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;*/
   font-size: 16px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   line-height: 1.75
 }
 
@@ -1254,7 +1254,7 @@ html {
 .article-entry .gist .gist-file .gist-meta {
   background: #272822;
   color: highlight-comment;
-  font: .85em Helvetica Neue, Helvetica, Arial, sans-serif;
+  font: .85em "Segoe UI", Helvetica Neue, Helvetica, Arial, sans-serif;
   text-shadow: 0 0;
   padding: 0;
   margin-top: 1em;
@@ -1548,7 +1548,7 @@ pre .id {
   opacity: .7;
   width: 28px;
   height: 28px;
-  line-height: 26px
+  line-height: 22.5px
 }
 
 #header .header-nav .social a:hover {
@@ -2209,7 +2209,7 @@ pre .id {
 .article-title {
   color: #696969;
   margin-left: 0;
-  font-weight: 300;
+  font-weight: 350;
   line-height: 35px;
   margin-bottom: 20px;
   font-size: 26px;
@@ -2285,7 +2285,7 @@ pre .id {
 }
 
 .article-inner p {
-  margin: 0 0 1.75em
+  /* margin: 0 0 1.75em */
 }
 
 .article-inner {
@@ -2305,7 +2305,7 @@ pre .id {
   font-size: 1.4375rem;
   line-height: 1.2173913043;
   margin-top: 2.4347826087em;
-  margin-bottom: 1.2173913043em
+  margin-bottom: 0.45em
 }
 
 .article-inner h3 {
@@ -2313,7 +2313,7 @@ pre .id {
   font-size: 1.1875rem;
   line-height: 1.1052631579;
   margin-top: 2.9473684211em;
-  margin-bottom: 1.4736842105em
+  margin-bottom: 0.3em
 }
 
 .article-inner h4,
@@ -2323,7 +2323,7 @@ pre .id {
   font-size: 1rem;
   line-height: 1.3125;
   margin-top: 3.5em;
-  margin-bottom: 1.75em
+  margin-bottom: 0.25em
 }
 
 .article-inner h4 {
@@ -2332,7 +2332,7 @@ pre .id {
 }
 
 .article-inner h6 {
-  font-style: italic
+  /* font-style: italic */
 }
 
 .article-inner h1,
@@ -2341,7 +2341,7 @@ pre .id {
 .article-inner h4,
 .article-inner h5,
 .article-inner h6 {
-  font-weight: 900
+  font-weight: 650
 }
 
 .article-inner h1:first-child,
@@ -2406,9 +2406,9 @@ pre .id {
   border-radius: 8px;
   background: #000;
   display: inline-block;
-  margin-right: 7px;
+  margin-right: 12px;
   float: left;
-  margin-top: 10px
+  margin-top: 12px
 }
 
 .article-entry ol {
@@ -2424,7 +2424,7 @@ pre .id {
 .article-entry ol,
 .article-entry ul {
   /* font-size: 14px; */
-  margin: 10px 0
+  /* margin: 10px 0 */
 }
 
 .article-entry li ol,
@@ -2435,7 +2435,7 @@ pre .id {
 .article-entry li ol li:before,
 .article-entry li ul li:before {
   content: "";
-  background: #dedede
+  background: #fff
 }
 
 .article-entry h1 {
@@ -2924,7 +2924,7 @@ pre .id {
 }
 
 .tooltip-left .tooltip:hover a.share-outer {
-  background: #24c1f6
+  background: rgba(77, 77, 77, 1))
 }
 
 @-webkit-keyframes pulse {
@@ -2979,6 +2979,7 @@ pre .id {
 
 .tooltip-left .tooltip-east .tooltip-content {
   right: 3.5em;
+  top: -270%;
   -webkit-transform-origin: calc(100% + 2em) 50%;
   transform-origin: calc(100% + 2em) 50%;
   -webkit-transform: translate3d(0, 50%, 0) rotate3d(1, 1, 1, -30deg);
@@ -3644,7 +3645,7 @@ pre .id {
   .header-author {
     text-align: center;
     margin: .67em 0;
-    font-family: Helvetica Neue, Roboto, Arial, Calibri, serif;
+    font-family: "Segoe UI", Helvetica Neue, Roboto, Arial, Calibri, serif;
     font-size: 30px;
     transition: .3s
   }
