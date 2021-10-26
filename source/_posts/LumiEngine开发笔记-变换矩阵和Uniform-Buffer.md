@@ -15,9 +15,16 @@ categories: [LumiEngine开发笔记]
 
 ### 1.1 标准化设备坐标系(NDC)
 
-NDC (Normalized Device Coordinates)
+NDC (Normalized Device Coordinates) is $A_i \overset{a}{\rightarrow} B$
 
 ### 1.2 矩阵存储结构
+
+$$
+|\mathcal{P}| = \left \{ \begin{align}
+	P, \ & P > 0 \\
+	-P, \ & P < 0
+\end{align} \right.
+$$
 
 
 
