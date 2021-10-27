@@ -902,7 +902,7 @@ html {
 }
 
 #container.show .anm-canvas {
-  display: block;
+  display: none;
   position: fixed
 }
 
@@ -916,12 +916,14 @@ html {
   min-height: 100%;
   background: #eaeaea;
   left: 300px;
-  width: auto
+  width: auto;
+  transition: all 0s ease-in;
+  z-index: 99999;
 }
 
 .mid-col.show {
   background: none;
-  opacity: .9
+  visibility: hidden
 }
 
 .mid-col.show .article {
@@ -978,7 +980,7 @@ html {
 }
 
 .left-col #header .header-menu {
-  font-weight: 300;
+  font-weight: 450;
   line-height: 31px;
   text-transform: uppercase;
   float: none;
@@ -1935,7 +1937,7 @@ pre .id {
 .tools-col .tools-wrap {
   height: 100%;
   color: #e5e5e5;
-  width: 360px;
+  width: 500px;
   overflow: hidden;
   overflow-y: auto
 }
@@ -1946,13 +1948,13 @@ pre .id {
 }
 
 .tools-col .tools-section .search-wrap {
-  width: 310px;
+  width: 475px;
   margin: 20px 20px 10px;
   position: relative
 }
 
 .tools-col .tools-section .search-wrap .search-ipt {
-  width: 310px;
+  width: 480px;
   color: #fff;
   background: none;
   border: none;
@@ -1983,10 +1985,10 @@ pre .id {
 }
 
 .tools-col .tools-section .search-tag.tagcloud .search-tag-wording {
-  font-size: 12px;
+  font-size: 15px;
   float: right;
-  margin: 4px 75px 0 0;
-  font-family: lucida grande;
+  margin: 3.5px 48px 0 0;
+  font-family: "Segoe UI", lucida, grande;
 }
 
 .tools-col .tools-section .search-tag.tagcloud .search-switch {
@@ -1996,7 +1998,7 @@ pre .id {
 }
 
 .tools-col .tools-section .search-tag.tagcloud .search-switch input {
-  width: 40px;
+  width: 10px;
   height: 14px;
   position: absolute;
   top: 0;
@@ -2010,10 +2012,10 @@ pre .id {
 
 .tools-col .tools-section .search-tag.tagcloud .search-switch input:before {
   content: "";
-  width: 40px;
-  height: 14px;
+  width: 35px;
+  height: 18px;
   border: 1px solid #bdcabc;
-  background-color: #fdfdfd;
+  background-color: #dfdfdf;
   border-radius: 20px;
   cursor: pointer;
   display: inline-block;
@@ -2029,24 +2031,25 @@ pre .id {
   border-color: #64bd63;
   box-shadow: inset 0 0 0 .16rem #64bd63;
   background-color: #64bd63;
-  transition: border .4s, box-shadow .4s, background-color 1.2s
+  transition: border .4s, box-shadow .4s, background-color .2s
 }
 
 .tools-col .tools-section .search-tag.tagcloud .search-switch input:checked:after {
-  left: 27px;
+  left: 19px;
+  top: 18px;
   background: #fff
 }
 
 .tools-col .tools-section .search-tag.tagcloud .search-switch input:after {
   content: "";
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   position: absolute;
-  top: 16px;
+  top: 18px;
   left: 2px;
   -webkit-transform: translateY(-50%);
   border-radius: 100%;
-  background-color: #91c0f1;
+  background-color: #fff;
   box-shadow: 0 1px 1px rgba(0, 0, 0, .4);
   transition: left .2s;
   cursor: pointer
@@ -4517,3 +4520,7 @@ https://ianlunn.github.io/Hover/ */
 }
 
 /*版权声明的样式》*/
+
+a.article-more-a {
+  font-size: 1.25rem;
+}
