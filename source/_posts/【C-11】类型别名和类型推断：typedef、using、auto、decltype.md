@@ -2,7 +2,7 @@
 title: 【C++11】类型别名和类型推断：typedef、using、auto、decltype
 date: 2021-01-19 16:58:04
 tags: [C++]
-categories: [探索编程语言]
+categories: [编程语言学习与理解]
 ---
 
 最近在读第5版的《C++ Primer》，发现C++11标准中有很多非常实用的新特性。这里简单总结下C++11标准中处理变量类型的一些特性。
