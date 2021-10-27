@@ -15,7 +15,7 @@ $(".highlight").wrap("<div class='code-wrapper' style='position:relative'></div>
         });
         clipboard.on('success', function (e) {
           e.trigger.innerHTML =
-            "<span style='color: #0f0;'><i class='fa fa-check' color='#0f0'></i></span>"; // copy success
+            "<span style='color: #43d0a5;'><i class='fa fa-check' color='#0f0'></i></span>"; // copy success
           setTimeout(function () {
             e.trigger.innerHTML =
               "<i class='fa fa-clipboard'>"; // copy

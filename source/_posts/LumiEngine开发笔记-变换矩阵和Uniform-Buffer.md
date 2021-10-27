@@ -23,6 +23,11 @@ categories: [LumiEngine开发笔记]
 
 asd 你好
 
+```C++
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+"asd"
+```
 
 
 ## 1 不同 API 之间的差异
