@@ -31,9 +31,11 @@
           <i class="icon-close icon" q-show="search|isNotEmptyStr" q-on="click:clearChose(e)"></i>
         </div>
         <div class="widget tagcloud search-tag">
-          <p class="search-tag-wording">Tags:</p>
           <label class="search-switch">
+            <span class="search-tag-wording-and-switch">
+            <p class="search-tag-wording">Tags:</p>
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
+            </span>
           </label>
           <ul class="article-tag-list" q-show="showTags">
             <% site.tags.forEach(function(tag, i){ %> 

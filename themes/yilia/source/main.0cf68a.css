@@ -1994,7 +1994,7 @@ pre .id {
 }
 
 .tools-col .tools-section .search-wrap .search-ipt {
-  width: 480px;
+  width: 470px;
   color: #fff;
   background: none;
   border: none;
@@ -2004,7 +2004,7 @@ pre .id {
 
 .tools-col .tools-section .search-wrap .icon {
   position: absolute;
-  right: 0;
+  right: 3%;
   top: 7px;
   color: #fff;
   cursor: pointer
@@ -2024,17 +2024,23 @@ pre .id {
   position: relative
 }
 
+.search-tag-wording-and-switch {
+  right: 3%;
+  position: absolute;
+}
+
 .tools-col .tools-section .search-tag.tagcloud .search-tag-wording {
   font-size: 15px;
-  float: right;
-  margin: 3.5px 48px 0 0;
+  position: absolute;
+  right: 20%;
+  margin: 3.5px 3.1rem 0 0;
   font-family: "Segoe UI", lucida, grande;
 }
 
 .tools-col .tools-section .search-tag.tagcloud .search-switch {
   width: 40px;
   height: 25px;
-  display: block
+  display: none
 }
 
 .tools-col .tools-section .search-tag.tagcloud .search-switch input {
@@ -2071,12 +2077,13 @@ pre .id {
   border-color: #64bd63;
   box-shadow: inset 0 0 0 .16rem #64bd63;
   background-color: #64bd63;
-  transition: border .4s, box-shadow .4s, background-color .2s
+  transition: border .4s, box-shadow .4s, background-color .2s;
+  right: 10%;
 }
 
 .tools-col .tools-section .search-tag.tagcloud .search-switch input:checked:after {
-  left: 19px;
-  top: 18px;
+  left: 1.1rem;
+  top: 1.13rem;
   background: #fff
 }
 
@@ -2958,7 +2965,7 @@ pre .id {
 
 .tooltip-left .tooltip {
   position: absolute;
-  z-index: 999;
+  z-index: 9;
   cursor: pointer;
   width: 28px;
   height: 28px;
@@ -3248,8 +3255,11 @@ pre .id {
   }
 
   .wrap-side-operation {
-    /* display: none */
-    right: 0
+    display: none
+  }
+
+  .toc-container.tooltip-left {
+    display: none;
   }
 
   .cloud-tie-wrapper {
@@ -4660,4 +4670,10 @@ https://ianlunn.github.io/Hover/ */
 /* 自定义样式 */
 a.article-more-a {
   font-size: 1.25rem;
+}
+
+/* 动态目录 */
+.toc-container.tooltip-left .tooltip-east .tooltip-content .active {
+    font-weight: bold;
+    color: #f99157
 }
