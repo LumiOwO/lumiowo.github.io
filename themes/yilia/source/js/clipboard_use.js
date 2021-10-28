@@ -25,7 +25,8 @@ $(".highlight").wrap("<div class='code-wrapper' style='position:relative'></div>
         });
         clipboard.on('error', function (e) {
           e.trigger.innerHTML =
-            "<span style='color: #f00;'><i class='fa fa-exclamation-circle'></i></span>"; // copy error
+            "<span style='color: #f00;'><i class='fa fa-exclamation-triangle'></i></span>"; // copy error
+
           setTimeout(function () {
             e.trigger.innerHTML =
               "<i class='fa fa-clipboard'>"; // copy

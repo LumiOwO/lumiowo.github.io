@@ -885,7 +885,7 @@ body,
 html {
   height: 100%;
   overflow-x: hidden;
-  overflow-y: auto
+  /* overflow-y: auto */
 }
 
 #mobile-nav {
@@ -3223,7 +3223,7 @@ pre .id {
   html {
     height: auto;
     overflow-x: hidden;
-    overflow-y: auto
+    /* overflow-y: auto */
   }
 
   #mobile-nav {
@@ -3248,7 +3248,8 @@ pre .id {
   }
 
   .wrap-side-operation {
-    display: none
+    /* display: none */
+    right: 0
   }
 
   .cloud-tie-wrapper {

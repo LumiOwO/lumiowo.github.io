@@ -32,3 +32,18 @@
 
 <!-- Tag cloud -->
 <script type="text/javascript" src="/js/colortag.js"></script>
+
+<!-- Scroll to link -->
+<script type="text/javascript">
+	document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+		anchor.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			// console.log("[id='" + this.getAttribute('href').substring(1) + "']")
+			document.querySelector("[id='" + this.getAttribute('href').substring(1) + "']").scrollIntoView({
+				behavior: 'smooth'
+			});
+		});
+	});
+</script>
+
