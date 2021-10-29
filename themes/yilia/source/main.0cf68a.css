@@ -4422,7 +4422,7 @@ a.pswp__share--download:hover {
 .category-count {
   text-align: left;
   line-height: 3;
-  font-size: 25px;
+  font-size: 1.9rem;
   margin-left: 5%;
   display: block;
 }
@@ -4510,7 +4510,7 @@ https://ianlunn.github.io/Hover/ */
   margin: 0 1em .5em 0;
   padding: 4px;
   /* border:1px solid #aaaaaa; */
-  font-size: 1.2rem
+  font-size: 1.4rem
 }
 
 /*.category-list li.category-list-item a {
@@ -4611,18 +4611,16 @@ https://ianlunn.github.io/Hover/ */
     display: flex;
     flex-wrap: wrap;
 }
-.all-tags ul {
-    justify-content:space-around
-}
 
+.all-tags ul ,
 .all-categories ul {
     justify-content:space-between
 }
 
-/* .all-tags ul :last-child ,
+.all-tags ul :last-child ,
 .all-categories ul :last-child {
     margin-right: auto;
-} */
+}
 
 .all-tags ul li ,
 .all-categories ul li {
@@ -4632,7 +4630,7 @@ https://ianlunn.github.io/Hover/ */
     overflow: hidden;
     display: flex;
     position: relative;
-    font-size: .9375rem;
+    font-size: 1.3rem;
 }
 
 .all-categories ul li {
@@ -4696,7 +4694,6 @@ https://ianlunn.github.io/Hover/ */
 
 /*版权声明的样式》*/
 
-/* 自定义样式 */
 a.article-more-a {
   font-size: 1.25rem;
 }
