@@ -4674,6 +4674,8 @@ https://ianlunn.github.io/Hover/ */
     right: 6.5px;
     top: 8px;
     height: calc(100% - 15px);
+    display: inline-flex;
+    align-items: center;
 }
 
 .all-tags ul li span:before ,
