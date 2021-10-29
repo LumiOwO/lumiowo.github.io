@@ -4592,8 +4592,19 @@ https://ianlunn.github.io/Hover/ */
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    justify-content: left;
 }
+.all-tags ul {
+    justify-content:space-around
+}
+
+.all-categories ul {
+    justify-content:space-between
+}
+
+/* .all-tags ul :last-child ,
+.all-categories ul :last-child {
+    margin-right: auto;
+} */
 
 .all-tags ul li ,
 .all-categories ul li {
