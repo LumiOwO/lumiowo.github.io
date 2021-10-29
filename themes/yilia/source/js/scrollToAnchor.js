@@ -10,11 +10,6 @@ let findPcHeadPosition = function (top) {
     if (top > $(this).position().top + $(this).offset().top) {
       currentId = "#" + $(this).attr("id");
     }
-    console.log(
-      top,
-      $(this).attr("id"),
-      $(this).position().top + $(this).offset().top
-    );
   });
 
   if (currentId === "") {
