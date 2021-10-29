@@ -412,6 +412,7 @@ a {
   background: transparent;
   text-decoration: none;
   color: #08c;
+  word-break: break-all;
 }
 
 a:active {
@@ -623,7 +624,8 @@ h4,
 h5,
 h6,
 p {
-  margin: 0
+  margin: 0;
+  text-align: justify
 }
 
 dd,
@@ -2415,7 +2417,7 @@ pre .id {
 }
 
 .article-entry p {
-  /* margin-top: 10px */
+  text-indent: 2em;
 }
 
 .article-entry li code,
@@ -2433,7 +2435,7 @@ pre .id {
 .article-entry blockquote {
   background: #ddd;
   border-left: 5px solid #ccc;
-  padding: 15px 20px;
+  padding: 15px calc(2em - 5px);
   margin-top: 10px;
   border-left: 5px solid #42b983;
   background: #ecf8f2;
@@ -2441,7 +2443,8 @@ pre .id {
 
 .article-entry blockquote p {
   margin-top: 0;
-  margin-bottom: 0
+  margin-bottom: 0;
+  text-indent: 0;
 }
 
 .article-entry em {
@@ -2461,6 +2464,10 @@ pre .id {
   margin-top: 12px
 }
 
+.article-entry ul li p {
+  text-indent: 0;
+}
+
 .article-entry ol {
   counter-reset: item
 }
@@ -2474,7 +2481,7 @@ pre .id {
 .article-entry ol,
 .article-entry ul {
   /* font-size: 14px; */
-  margin: 5px 0
+  margin: 5px calc(1em - 3px)
 }
 
 .article-entry li ol,
@@ -2486,6 +2493,16 @@ pre .id {
 .article-entry li ul li:before {
   content: "";
   background: #fff
+}
+
+.article-entry li ul li ol li:before,
+.article-entry li ul li ul li:before {
+  content: "";
+  background: #000;
+  border: 1px solid #000;
+  border-radius: 0px;
+  width: 5px;
+  height: 5px;
 }
 
 .article-entry h1 {

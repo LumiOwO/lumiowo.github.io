@@ -5,47 +5,35 @@ tags: [Engine, Vulkan, Graphics]
 categories: [LumiEngine开发笔记]
 ---
 
-> LumiEngine on Github: https://github.com/LumiOwO/LumiEngine 
+> 继续LumiEngine on Github: https://github.com/LumiOwO/LumiEngine 啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
 
 继续学习 [Vulkan Tutorial](https://vulkan-tutorial.com/Uniform_buffers/Descriptor_layout_and_buffer)，这次我们来看 Uniform buffers 章节并将这部分集成到引擎里。
-
-# 1asd你好
-
-## 654你好
-
-### 6+545你好
-
-#### 65142你好
-
-##### 651米好
-
-###### asd你好
-
-asd 你好
-
-```C++
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-
-"asd"
-```
 
 
 ## 1 不同 API 之间的差异
 
-在讨论变换矩阵的原理之前，我们先总结一下各种图形接口在定义变换操作上的一些差异。之前查资料时没有把这部分弄清楚，导致后面的变换部分看的我一头雾水。。
+在讨论变换矩阵的原理之前，
+
+- 好
+
+    - 很好
+
+        - 非常好
+
+    - 特别好
+
+        - 特标号
+            - 特54别好
+
+        - 好好好
+
+我们先总结一下各种图形接口在定义变换操作上的一些差异。之前查资料时没有把这部分弄清楚，导致后面的变换部分看的我一头雾水。。
 
 ### 1.1 标准化设备坐标系 (NDC)
 
-NDC (Normalized Device Coordinates) is $A_i \overset{a}{\rightarrow} B$
+NDC (Normalized Device Coordinates) 
 
 ### 1.2 矩阵存储结构
-
-$$
-|\mathcal{P}| = \left \{ \begin{aligned}
-	P, \ & P > 0 \\
-	-P, \ & P < 0
-\end{aligned} \right.
-$$
 
 
 
@@ -76,9 +64,7 @@ MVP矩阵
 ## 4 待解决的问题
 
 - 模型加载进来后顶点坐标没有 z 值
-    - ads 
-        - asd
-            - asd
+    - a
 - 设计相机和光源表示
 - 变换矩阵的存储和传递
 
