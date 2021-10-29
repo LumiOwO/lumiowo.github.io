@@ -2325,7 +2325,7 @@ pre .id {
 
 .article-info-index.article-info {
   padding-top: 20px;
-  margin: 30px 7.6923% 0;
+  margin: 0.8rem 7.6923% 0;
   min-height: 72px;
   border-top: 1px solid #ddd
 }
@@ -3393,7 +3393,7 @@ pre .id {
   .article-info-index.article-info {
     min-height: 40px;
     padding-top: 10px;
-    margin: 0;
+    margin: -1.4rem 0 0;
     border-top: 1px solid #ddd
   }
 
@@ -4699,6 +4699,11 @@ https://ianlunn.github.io/Hover/ */
 /* 自定义样式 */
 a.article-more-a {
   font-size: 1.25rem;
+}
+
+.article-more-left-link {
+  display: block;
+  margin-top: 1.3rem;
 }
 
 /* 动态目录 */
