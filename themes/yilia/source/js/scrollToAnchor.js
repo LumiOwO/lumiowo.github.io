@@ -1,29 +1,34 @@
-var findPcHeadPosition = function (top) {
+let findPcHeadPosition = function (top) {
   // assume that we are not in the post page if no TOC link be found,
   // thus no need to update the status
   if ($(".toc-link").length === 0) {
     return false;
   }
-  var list = $(".article-entry").find("h1,h2,h3,h4,h5,h6");
-  var currentId = "";
+  let list = $(".article-entry").find("h1,h2,h3,h4,h5,h6");
+  let currentId = "";
   list.each(function () {
-    var head = $(this);
-    if (top > head.position().top) {
+    if (top > $(this).position().top + $(this).offset().top) {
       currentId = "#" + $(this).attr("id");
     }
+    console.log(
+      top,
+      $(this).attr("id"),
+      $(this).position().top + $(this).offset().top
+    );
   });
 
   if (currentId === "") {
     $(".toc-link").removeClass("active");
+    $('.toc-link[href="' + "#" + list.first().attr("id") + '"]').addClass("active");
+  } else {
+    let currentActive = $(".toc-link.active");
+    if (currentActive.attr("href") !== currentId) {
+      currentActive.removeClass("active");
+      $('.toc-link[href="' + currentId + '"]').addClass("active");
+    }
   }
 
-  var currentActive = $(".toc-link.active");
-  if (currentId && currentActive.attr("href") !== currentId) {
-    $(".toc-link").removeClass("active");
-
-    var _this = $('.toc-link[href="' + currentId + '"]');
-    _this.addClass("active");
-  }
+  
 };
 
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
@@ -38,6 +43,7 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
       });
   });
 });
+findPcHeadPosition($(this).scrollTop());
 
 $("#container").scroll(function () {
   findPcHeadPosition($(this).scrollTop());

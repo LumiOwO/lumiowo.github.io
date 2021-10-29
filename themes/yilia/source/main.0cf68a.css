@@ -4674,6 +4674,7 @@ a.article-more-a {
 
 /* 动态目录 */
 .toc-container.tooltip-left .tooltip-east .tooltip-content .active {
-    font-weight: bold;
-    color: #f99157
+    /* font-weight: bold; */
+    text-shadow: 0 0 1.2px #ff840a, 0 0 1.2px #ff840a;
+    color: #ff840a
 }
