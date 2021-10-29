@@ -2944,6 +2944,7 @@ pre .id {
 
 .toc-container.tooltip-left .tooltip-east .tooltip-content .toc-article {
   max-height: 500px;
+  min-width: 180px;
   overflow-x: hidden;
   overflow-y: auto
 }
