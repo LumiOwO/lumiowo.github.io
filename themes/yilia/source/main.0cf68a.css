@@ -2025,7 +2025,7 @@ pre .id {
 }
 
 .search-tag-wording-and-switch {
-  right: 3%;
+  left: 6.7rem;
   position: absolute;
 }
 
@@ -2040,7 +2040,7 @@ pre .id {
 .tools-col .tools-section .search-tag.tagcloud .search-switch {
   width: 40px;
   height: 25px;
-  display: none
+  display: block
 }
 
 .tools-col .tools-section .search-tag.tagcloud .search-switch input {
@@ -2083,7 +2083,7 @@ pre .id {
 
 .tools-col .tools-section .search-tag.tagcloud .search-switch input:checked:after {
   left: 1.1rem;
-  top: 1.13rem;
+  top: 1.1rem;
   background: #fff
 }
 
@@ -2092,7 +2092,7 @@ pre .id {
   width: 16px;
   height: 16px;
   position: absolute;
-  top: 18px;
+  top: 1.1rem;
   left: 2px;
   -webkit-transform: translateY(-50%);
   border-radius: 100%;

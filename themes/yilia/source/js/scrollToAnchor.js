@@ -1,18 +1,3 @@
-var autoScrollToc = function () {
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener("click", function (e) {
-      e.preventDefault();
-
-      // console.log("[id='" + this.getAttribute('href').substring(1) + "']")
-      document
-        .querySelector("[id='" + this.getAttribute("href").substring(1) + "']")
-        .scrollIntoView({
-          behavior: "smooth",
-        });
-    });
-  });
-};
-
 var findPcHeadPosition = function (top) {
   // assume that we are not in the post page if no TOC link be found,
   // thus no need to update the status
@@ -41,9 +26,19 @@ var findPcHeadPosition = function (top) {
   }
 };
 
-autoScrollToc();
+document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+  anchor.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    // console.log("[id='" + this.getAttribute('href').substring(1) + "']")
+    document
+      .querySelector("[id='" + this.getAttribute("href").substring(1) + "']")
+      .scrollIntoView({
+        behavior: "smooth",
+      });
+  });
+});
 
 $("#container").scroll(function () {
   findPcHeadPosition($(this).scrollTop());
-  autoScrollToc();
 });
