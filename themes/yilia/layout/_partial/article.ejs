@@ -3,17 +3,24 @@
     <% if (post.link || post.title){ %>
       <header class="article-header">
         <%- partial('post/title', {class_name: 'article-title'}) %>
-        <!--显示阅读次数-->
+        <% if (index && post.top) {%>
+          <br/>
+          <span style="color:#e74c3c;font-size:0.9em;font-weight: bold;">
+          <i class="fa fa-thumb-tack"></i>&nbsp&nbsp置顶
+          </span>
+        <% } %>
         <% if (!index && post.comments){ %>
           <br/>
+          <!--显示阅读次数-->
           <a class="cloud-tie-join-count" href="javascript:void(0);" style="color:gray;font-size:14px;">
           <!-- <span class="icon-sort"></span> -->
-          <span id="busuanzi_container_page_pv" style="color: rgb(239, 117, 34); font-size: 14px; display: inline;">
-                    👁 <span id="busuanzi_value_page_pv"></span> &nbsp;&nbsp;
+          <span id="busuanzi_container_page_pv" style="color: rgb(239, 117, 34); font-size: 1em; display: inline;">
+            <i class="fa fa-eye"></i>&nbsp
+            <span id="busuanzi_value_page_pv"></span> &nbsp;&nbsp;
           </span>
           </a>
+          <!--显示阅读次数完毕-->
         <% } %>
-        <!--显示阅读次数完毕-->
         <% if (!post.noDate){ %>
         <%- partial('post/date', {class_name: 'archive-article-date', date_format: null}) %>
         <% } %>
