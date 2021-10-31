@@ -3439,7 +3439,8 @@ pre .id {
     font-size: 18px;
     font-weight: 300;
     display: block;
-    margin: 0
+    margin: 0;
+    word-break: normal;
   }
 
   .article .article-meta {
