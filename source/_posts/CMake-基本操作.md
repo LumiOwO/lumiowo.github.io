@@ -1,5 +1,5 @@
 ---
-title: 【CMake的使用】CMake 的一些基本操作
+title: CMake - 基本操作
 date: 2021-01-11 11:11:13
 tags: [CMake]
 categories: [编程语言学习与理解]

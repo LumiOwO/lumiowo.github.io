@@ -1,5 +1,5 @@
 ---
-title: 【C++11】类型别名和类型推断：typedef、using、auto、decltype
+title: C++11 - 类型别名和类型推断：typedef、using、auto、decltype
 date: 2021-01-19 16:58:04
 tags: [C++]
 categories: [编程语言学习与理解]

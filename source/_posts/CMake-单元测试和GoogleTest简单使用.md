@@ -1,5 +1,5 @@
 ---
-title: 【CMake的使用】单元测试和 GoogleTest 简单使用
+title: CMake - 单元测试和 GoogleTest 简单使用
 date: 2021-01-17 20:50:43
 tags: [CMake, GoogleTest]
 categories: [编程语言学习与理解]
@@ -211,7 +211,7 @@ Expected equality of these values:
 >
 > 这里我推荐一个VS Code里的可视化插件：[C++ TestMate](https://marketplace.visualstudio.com/items?itemName=matepek.vscode-catch2-test-adapter)，使用该插件运行上面的测试样例，可以得到下面的可视化结果：
 >
-> ![image-20210117205156858](%E3%80%90CMake%E7%9A%84%E4%BD%BF%E7%94%A8%E3%80%91%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E5%92%8CGoogleTest%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/image-20210117205156858.png)
+> ![image-20210117205156858](CMake-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E5%92%8CGoogleTest%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/image-20210117205156858.png)
 
 #### 2.3.2 `ASSERT_*()`和`EXPECT_*()`
 
