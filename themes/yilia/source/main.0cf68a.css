@@ -2416,6 +2416,10 @@ pre .id {
   padding-left: 7.6923%
 }
 
+.article-entry li {
+  text-align: justify;
+}
+
 .article-entry p {
   text-indent: 2em;
 }
@@ -2466,6 +2470,7 @@ pre .id {
 
 .article-entry ul li p {
   text-indent: 0;
+  margin-left: 20px;
 }
 
 .article-entry ol {
