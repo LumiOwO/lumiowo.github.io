@@ -37,3 +37,12 @@
 <script type="text/javascript" src="/js/scrollToAnchor.js"></script>
 
 
+<!-- Mermaid -->
+<% if (theme.mermaid.enable) { %>
+  <script src='<%= theme.mermaid.cdn %>'></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({theme: '<%= theme.mermaid.options.theme %>'});
+    }
+  </script>
+<% } %>

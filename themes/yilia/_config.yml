@@ -131,5 +131,16 @@ smart_menu:
 #   avatar: mp #评论列表头像样式：''/mp/identicon/monsterid/wavatar/retro/hide
 #   placeholder: 发条友善的评论吧(^_^) #评论框占位符
 
+# 评论管理
 twikoo:
   envId: lumi-cloudbase-0gqxziw8cd9095c0 #您的环境id
+
+mermaid:
+  enable: true
+  cdn: //cdn.jsdelivr.net/npm/mermaid@8.4.2/dist/mermaid.min.js
+  options: # 更多配置信息可以参考 https://mermaidjs.github.io/#/mermaidAPI
+    theme: 'default'
+    startOnLoad: true
+    flowchart:
+      useMaxWidth: false
+    #   htmlLabels: true

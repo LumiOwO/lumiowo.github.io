@@ -920,7 +920,7 @@ html {
   left: 300px;
   width: auto;
   transition: all 0s ease-in;
-  z-index: 99999;
+  z-index: 1200;
 }
 
 .mid-col.show {
@@ -1131,6 +1131,10 @@ html {
   color: #fff;
   font-size: .9em;
   line-height: 22.400000000000002px
+}
+
+.article-entry pre, .mermaid{
+    background:transparent;
 }
 
 .article-entry .gist .gist-file .gist-data .line-numbers,
