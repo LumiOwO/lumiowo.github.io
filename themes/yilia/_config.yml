@@ -133,7 +133,7 @@ smart_menu:
 
 # 评论管理
 twikoo:
-  envId: lumi-cloudbase-0gqxziw8cd9095c0 #您的环境id
+  envId: twikoo-0gvgymo6d61aeeea #您的环境id
 
 mermaid:
   enable: true
@@ -141,6 +141,6 @@ mermaid:
   options: # 更多配置信息可以参考 https://mermaidjs.github.io/#/mermaidAPI
     theme: 'default'
     startOnLoad: true
-    flowchart:
-      useMaxWidth: false
+    # flowchart:
+    #   useMaxWidth: false
     #   htmlLabels: true
