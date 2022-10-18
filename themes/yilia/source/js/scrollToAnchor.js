@@ -8,13 +8,15 @@ let findPcHeadPosition = function (top) {
   let currentId = "";
   list.each(function () {
     if (top > $(this).position().top + $(this).offset().top) {
-      currentId = "#" + $(this).attr("id");
+      currentId = "#" + encodeURI($(this).attr("id"));
     }
   });
+  // console.log(currentId)
 
   if (currentId === "") {
+    currentId = "#" + encodeURI(list.first().attr("id"));
     $(".toc-link").removeClass("active");
-    $('.toc-link[href="' + "#" + list.first().attr("id") + '"]').addClass("active");
+    $('.toc-link[href="' + currentId + '"]').addClass("active");
   } else {
     let currentActive = $(".toc-link.active");
     if (currentActive.attr("href") !== currentId) {
@@ -30,9 +32,9 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", function (e) {
     e.preventDefault();
 
-    // console.log("[id='" + this.getAttribute('href').substring(1) + "']")
+    // console.log("[id='" + decodeURI(this.getAttribute('href').substring(1)) + "']")
     document
-      .querySelector("[id='" + this.getAttribute("href").substring(1) + "']")
+      .querySelector("[id='" + decodeURI(this.getAttribute("href").substring(1)) + "']")
       .scrollIntoView({
         behavior: "smooth",
       });

@@ -2,7 +2,7 @@
 title: CMake - 单元测试和 GoogleTest 简单使用
 date: 2021-01-17 20:50:43
 tags: [CMake, GoogleTest]
-categories: [编程语言学习与理解]
+categories: [编程语言学习]
 ---
 
 单元测试是项目中非常重要的一个环节。在开发的过程中，应该养成每实现一个小模块就相应地做一系列单元测试的习惯，以保证该模块的正确性。这篇文章将简单介绍GTest框架以及如何利用CMake为自己的项目添加单元测试模块。

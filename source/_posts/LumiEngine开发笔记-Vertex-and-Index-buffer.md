@@ -3,6 +3,7 @@ title: LumiEngine 开发笔记 - Vertex and Index buffer
 date: 2021-10-12 23:44:41
 tags: [Engine, Vulkan]
 categories: [LumiEngine 开发笔记]
+hide: true
 ---
 
 > LumiEngine on Github: https://github.com/LumiOwO/LumiEngine 

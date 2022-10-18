@@ -2,7 +2,7 @@
 title: CMake - 基本操作
 date: 2021-01-11 11:11:13
 tags: [CMake]
-categories: [编程语言学习与理解]
+categories: [编程语言学习]
 ---
 
 >  对github项目https://github.com/ttroy50/cmake-examples.git 进行学习总结 

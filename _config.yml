@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Lumi的博客
+title: LumiOwO 的博客
 subtitle: '諦めない！'
 description:
 keywords:
-author: Lumi
+author: LumiOwO
 language: en
 timezone: ''
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://lumiowo.gitee.io
+url: https://lumiowo.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -100,7 +100,7 @@ theme: yilia
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://gitee.com/LumiOwO/lumiowo.git
+  repo: https://github.com/LumiOwO/lumiowo.github.io.git
   branch: master
 
 jsonContent:
