@@ -19,7 +19,7 @@ date: 2022-10-18 21:41:48
 > - https://answers.microsoft.com/zh-hans/windows/forum/all/win11%E5%BC%80%E6%9C%BA%E5%90%8E%E9%A6%96%E6%AC%A1/cb2f845c-c503-4a9d-909e-3364965c8329
 > - https://answers.microsoft.com/zh-hans/windows/forum/all/win11%E5%BC%80%E6%9C%BA%E4%B9%8B%E5%90%8E%E7%99%BD/44016f9c-ae09-4f86-a34b-b307b9d5fb2e
 
-试了一下，把网线拔了以后确实能秒登录。。但每次开机都要拔网线也太麻烦了，因此写了一个脚本，每次开机时断网再联网，具体的实现办法是将对应的网络适配器先禁用再启用。脚本代码贴在下面，该脚本需要以管理员身份运行。
+试了一下，把网线拔了以后确实能秒登录。。但每次开机都要拔网线也太麻烦了，因此写了一个脚本，每次开机时断网再联网，具体的实现办法是将对应的网络适配器先禁用再启用。脚本代码贴在下面，该脚本需要以管理员身份运行。注意脚本里含中文，一般系统语言是中文的情况下需要使用 GBK 编码，utf-8 会报错。
 
 ```bash
 @echo off
@@ -72,3 +72,12 @@ goto:eof
 ## 3 右键菜单管理
 
 推荐工具：[ContextMenuManager](https://github.com/BluePointLilac/ContextMenuManager)
+
+## 4 文本选择时鼠标指针变白，导致找不到鼠标
+
+参考[这里](https://blog.csdn.net/Loery1314/article/details/126915427)，控制面板 -> 硬件和声音 -> 鼠标 -> 指针，更换文本选择的光标，如`beam_r.cur`
+
+## 5 修改默认的英文字体
+
+很多软件打开后英文字体默认为宋体，非常难看，可以通过注册表修改默认英文字体，参考[这里](https://jingyan.baidu.com/article/03b2f78c13b0c85ea237ae8d.html)。注册表路径：`HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\GRE_Initialize`，修改`GUIFont.Facename`的值，默认为`SimSun`，即宋体，我一般改成`Arial`.
+
