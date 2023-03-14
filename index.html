@@ -156,6 +156,369 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Faster Inference_20220903" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/11/03/Faster%20Inference_20220903/">Monte Carlo Volume Rendering 原理</a>
+    </h1>
+  
+
+        
+        
+        
+        <a href="/2022/11/03/Faster%20Inference_20220903/" class="archive-article-date">
+  	<time datetime="2022-11-02T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-11-03</time>
+</a>
+        
+      </header>
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="进展"><a href="#进展" class="headerlink" title="进展"></a>进展</h2><ul>
+<li>学习理解了 monte carlo volume rendering 相关内容</li>
+<li>实现了 pytorch 版本，验证正确</li>
+<li>后续工作<ul>
+<li>解决该方法带来的一些新问题</li>
+<li>实现时序降噪</li>
+<li>进一步优化速度</li>
+</ul>
+</li>
+</ul>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><p>参考 delta tracking 的原理</p>
+</li>
+<li><p>Transmittance 计算，<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/519969318">https://zhuanlan.zhihu.com/p/519969318</a></p>
+</li>
+<li>delta tracking，<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/166116224">https://zhuanlan.zhihu.com/p/166116224</a></li>
+<li>*<strong>volume rendering siggraph18 课程，<a target="_blank" rel="noopener" href="https://cs.dartmouth.edu/wjarosz/publications/novak18monte-sig.html">https://cs.dartmouth.edu/wjarosz/publications/novak18monte-sig.html</a></strong></li>
+<li>*<strong>volume rendering survey, <a target="_blank" rel="noopener" href="https://cs.dartmouth.edu/wjarosz/publications/novak18monte.pdf">https://cs.dartmouth.edu/wjarosz/publications/novak18monte.pdf</a></strong></li>
+</ul>
+<h3 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h3><ul>
+<li>nerf 的积分公式<ul>
+<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902150611361.png" alt="image-20220902150611361" style="zoom: 67%;"></li>
+</ul>
+</li>
+<li><strong>目标：获得一个数值解，使得该数值解的期望值等于积分的值</strong><ul>
+<li>nerf：采样 1 条光线，这条光线上取 1024个 采样点</li>
+<li>ours：采样 n 条光线，每条光线上取 少量 采样点，最终结果为 n 条光线结果的均值<ul>
+<li>每条光线相互独立，因此可以每一帧只采样 1 条光线，再根据相邻帧的结果进行降噪（即时序降噪）</li>
+</ul>
+</li>
+<li>每像素采样数 (spp) = 采样光线的数量</li>
+</ul>
+</li>
+<li>完整的 volume rendering 公式<ul>
+<li>记号说明：密度 $\sigma \to \mu$，颜色 $c \to L$，$\tau = \int_0^y\mu_t(s) \,\mathrm{d}s$</li>
+<li>nerf 没有 in-scattering 这一项</li>
+<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902151406809.png" alt="image-20220902151406809" style="zoom:67%;"></li>
+</ul>
+</li>
+<li>利用 $\int<em>a^bf(x) \,\mathrm{d}x \to \frac{1}{N}\sum</em>{i=1}^N \frac{f(x_i)}{p(x_i)}\$  写成蒙特卡洛形式<ul>
+<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902152830548.png" alt="image-20220902152830548" style="zoom:67%;"></li>
+</ul>
+</li>
+</ul>
+<h3 id="distance-sampling"><a href="#distance-sampling" class="headerlink" title="distance sampling"></a>distance sampling</h3><ul>
+<li><strong>目标：利用概率密度函数，把 $T$ 消掉</strong></li>
+<li>由于 <img src="/2022/11/03/Faster%20Inference_20220903/image-20220902153148833.png" alt="image-20220902153148833" style="zoom:67%;">, $T \in [0, 1]$，在 $[0, +\infty)$ 上单调递减</li>
+<li>取 $F(t) = 1 - T(t)$ 作为累积密度函数 (CDF)<ul>
+<li>此时 $p(t)$ 正好为 $\mu \cdot T$</li>
+</ul>
+</li>
+<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902153058630.png" alt="image-20220902153058630" style="zoom:67%;"></li>
+<li>采样时，先取一个 $[0, 1]$ 之间的随机数 $\xi$，令 $F(t) = \xi$，解出 $t$ 的值作为采样点的位置</li>
+<li>如果 $\mu_t$ 是常数，可以直接得到 $F^{-1}$ 的解析式</li>
+<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902154438934.png" alt="image-20220902154438934" style="zoom:67%;"></li>
+</ul>
+<h3 id="null-collision"><a href="#null-collision" class="headerlink" title="null collision"></a>null collision</h3><ul>
+<li><strong>目标：想办法把空间填充成均匀的</strong></li>
+<li>向空间中填入虚拟粒子（粉色），与真实粒子（灰色）构成一个均匀的空间</li>
+<li><p>虚拟粒子不影响光线原本的传播</p>
+<ul>
+<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902155146793.png" alt="image-20220902155146793" style="zoom:67%;"></li>
+</ul>
+</li>
+<li><p>例子：采样一条光线</p>
+<ul>
+<li>每次前进 $-\frac{\ln (1-\xi)}{\bar\mu}\$</li>
+<li>如果采样到虚拟粒子，认为是一个 null collision，继续向前取采样点</li>
+<li>如果采样到真实粒子，认为光线被该粒子挡住，停止向前</li>
+<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902160119667.png" alt="image-20220902160119667" style="zoom:67%;"></li>
+</ul>
+</li>
+<li><p>积分公式</p>
+<ul>
+<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902160713366.png" alt="image-20220902160713366" style="zoom:67%;"></li>
+</ul>
+</li>
+<li><p>蒙特卡洛形式</p>
+<ul>
+<li><p><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902160739942.png" alt="image-20220902160739942" style="zoom:67%;"></p>
+</li>
+<li><p><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902160953396.png" alt="image-20220902160953396" style="zoom:67%;"></p>
+</li>
+</ul>
+</li>
+<li><p>$L<em>*$ 用俄罗斯轮盘赌的方法估计，即 $\langle L</em><em>(y, \omega) \rangle = \left{ \begin{matrix} \frac{L_</em>(y)}{P<em>*(y)}&amp;, \xi &lt; P</em>*(y)\0&amp;,\mathrm{otherwise}\end{matrix} \right. \$</p>
+</li>
+<li><p>因此 $\langle L(x, \omega) \rangle = \sum<em>C^{ \;} w</em><em>(x)L_</em>(y, \omega)\$<br>其中 $w<em>*(x) = \frac{T</em>{\bar\mu}(x, y)}{p<em>{\bar\mu}}\frac{\mu</em><em>(x)}{P_</em>(x)}\$</p>
+</li>
+<li><p>由于 $p<em>{\bar\mu} = \bar\mu \cdot T</em>{\bar\mu}(x, y)\$，故 $w<em>*(x) = \frac{1}{\bar\mu}\frac{\mu</em><em>(x)}{P_</em>(x)} = 1\$</p>
+</li>
+</ul>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><ul>
+<li><p>结果符合预期</p>
+<ul>
+<li>透明度的问题在后面讨论</li>
+</ul>
+<p>|                            1 spp                             |                            16 spp                            |                           1024 spp                           |<br>| :—————————————————————————————: | :—————————————————————————————: | :—————————————————————————————: |<br>| <img src="/2022/11/03/Faster%20Inference_20220903/image-20220902163521228.png" alt="image-20220902163521228"> | <img src="/2022/11/03/Faster%20Inference_20220903/image-20220902163638842.png" alt="image-20220902163638842"> | <img src="/2022/11/03/Faster%20Inference_20220903/ngp_ep0300_0000_rgb.png" alt="ngp_ep0300_0000_rgb"> |</p>
+</li>
+<li><p>采样问题终于解决，可以实现后续的时序降噪</p>
+</li>
+</ul>
+<h2 id="一些问题"><a href="#一些问题" class="headerlink" title="一些问题"></a>一些问题</h2><h3 id="mu-t-的范围"><a href="#mu-t-的范围" class="headerlink" title="$\mu_t$ 的范围"></a>$\mu_t$ 的范围</h3><ul>
+<li><p>目前结果的透明度不正确</p>
+</li>
+<li><p>原因：目前 $\bar\mu = 10$ ，取值小于 $\mu_t$</p>
+<ul>
+<li>此时 $P_t = \mu_t / \bar\mu &gt; 1$，必定会取到真实粒子</li>
+<li>相当于把 $\mu_t$ 的最大值裁剪到了 $\bar\mu$</li>
+<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902164241172.png" alt="image-20220902164241172"></li>
+</ul>
+</li>
+<li><p>验证：$\bar\mu$ 值越高，越接近真实值</p>
+<ul>
+<li>spp = 1024</li>
+</ul>
+<p>|                        $\bar\mu = 2$                         |                        $\bar\mu = 10$                        |                        $\bar\mu = 20$                        |                ground truth                 |<br>| :—————————————————————————————: | :—————————————————————————————: | :—————————————————————————————: | :————————————————————-: |<br>| <img src="/2022/11/03/Faster%20Inference_20220903/ngp_ep0300_0000_rgb-16621090516547.png" alt="ngp_ep0300_0000_rgb"> | <img src="/2022/11/03/Faster%20Inference_20220903/ngp_ep0300_0000_rgb-16621088581862.png" alt="ngp_ep0300_0000_rgb"> | <img src="/2022/11/03/Faster%20Inference_20220903/ngp_ep0300_0000_rgb-16621089759004.png" alt="ngp_ep0300_0000_rgb"> | <img src="/2022/11/03/Faster%20Inference_20220903/r_0.png" alt="r_0"> |</p>
+</li>
+<li><p>$\bar\mu$ 取的太大会出现新的问题（见后文）</p>
+</li>
+<li><p>$\mu_t$ 的最大值太大了</p>
+<ul>
+<li>最大值能达到 200000 左右</li>
+<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902170029346.png" alt="image-20220902170029346" style="zoom: 67%;"></li>
+</ul>
+</li>
+</ul>
+<h3 id="bar-mu-的选取"><a href="#bar-mu-的选取" class="headerlink" title="$\bar\mu$ 的选取"></a>$\bar\mu$ 的选取</h3><ul>
+<li><p>$\bar\mu$ 越大，每条光线的采样点数量越多</p>
+<ul>
+<li>步长为 $-\frac{\ln (1-\xi)}{\bar\mu}\$，$\bar\mu$ 越大步长越小</li>
+<li>$\bar\mu$ 越大，越容易采样到虚拟粒子，需要继续往前步进</li>
+<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902170601183.png" alt="image-20220902170601183" style="zoom:67%;"></li>
+</ul>
+</li>
+<li><p>验证：$\bar\mu$ 值越高，运行时间越长</p>
+<ul>
+<li>spp = 1024</li>
+</ul>
+</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">$\bar\mu = 2$</th>
+<th style="text-align:center">$\bar\mu = 10$</th>
+<th style="text-align:center">$\bar\mu = 20$</th>
+<th style="text-align:center">$\bar\mu = 2000$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">运行时间</td>
+<td style="text-align:center">10.58 s</td>
+<td style="text-align:center">35.79 s</td>
+<td style="text-align:center">64.10 s</td>
+<td style="text-align:center">&gt; 60 min</td>
+</tr>
+<tr>
+<td style="text-align:center">采样点个数的最大值</td>
+<td style="text-align:center">26</td>
+<td style="text-align:center">54</td>
+<td style="text-align:center">81</td>
+<td style="text-align:center">-</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><h4 id="思路一"><a href="#思路一" class="headerlink" title="思路一"></a>思路一</h4><ul>
+<li>重新训练网络，限制 $\sigma$（即 $\mu_t$）的输出范围<ul>
+<li>如果能限制 $\sigma$ 在 $[0, 1]$ 范围内，可以很大提升采样效率</li>
+</ul>
+</li>
+<li>当前 density 网络使用的激活函数是指数函数 (exp)</li>
+<li>手动试了一些激活函数<ul>
+<li>学习率 lr = 0.01，epoch = 50</li>
+<li>发现在 $\sigma$ 值很大的时候结果才比较好</li>
+</ul>
+</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">$\sigma$ 激活函数</th>
+<th style="text-align:center">$\sigma$ 范围</th>
+<th style="text-align:center">$c$ 激活函数</th>
+<th style="text-align:center">验证集 psnr</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">exp</td>
+<td style="text-align:center">[0, 200000]</td>
+<td style="text-align:center">sigmoid</td>
+<td style="text-align:center">32.294314 (baseline)</td>
+</tr>
+<tr>
+<td style="text-align:center">relu</td>
+<td style="text-align:center">[0, 1000]</td>
+<td style="text-align:center">sigmoid</td>
+<td style="text-align:center">31.334019</td>
+</tr>
+<tr>
+<td style="text-align:center">sigmoid</td>
+<td style="text-align:center">[0, 1]</td>
+<td style="text-align:center">sigmoid</td>
+<td style="text-align:center">9.352023</td>
+</tr>
+<tr>
+<td style="text-align:center">sigmoid</td>
+<td style="text-align:center">[0, 1]</td>
+<td style="text-align:center">relu</td>
+<td style="text-align:center">9.371691</td>
+</tr>
+<tr>
+<td style="text-align:center">sigmoid * 1000</td>
+<td style="text-align:center">[0, 1000]</td>
+<td style="text-align:center">relu</td>
+<td style="text-align:center">30.554971</td>
+</tr>
+<tr>
+<td style="text-align:center">tanh + relu</td>
+<td style="text-align:center">[0, 1]</td>
+<td style="text-align:center">relu</td>
+<td style="text-align:center">15.853888</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>后面去搜索一下参数，看看能不能找到一个比较好的组合</li>
+</ul>
+<h4 id="思路二"><a href="#思路二" class="headerlink" title="思路二"></a>思路二</h4><ul>
+<li><p>$\sigma$ 值限制在 $[0, 1]$ 之间，允许颜色值大于 1</p>
+<ul>
+<li>此时的颜色不再理解为像素的 rgb 颜色值，而是理解为辐射度 $L$，因此可以大于 1</li>
+</ul>
+</li>
+<li><p>改用 NeRF-SH 网络</p>
+<ul>
+<li>将输出的 rgb 颜色值改为球谐函数的系数</li>
+<li>系数的取值范围不再限制在 $[0, 1]$ 内</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>以上思路打算后续都试一下</li>
+</ul>
+<h2 id="Todos"><a href="#Todos" class="headerlink" title="Todos"></a>Todos</h2><ul>
+<li><p>[x] 学习 delta tracking 原理</p>
+</li>
+<li><p>[x] 实现 pytorch 版本</p>
+</li>
+<li><p>[ ] 解决 $\bar\mu$ 的问题</p>
+<ul>
+<li>[ ] 尝试上面提到的思路</li>
+<li>[ ] 继续看论文，找找有没有可参考的其他解决方法</li>
+</ul>
+</li>
+<li><p>[ ] 实现时序降噪</p>
+</li>
+<li><p>[ ] 后续优化</p>
+<ul>
+<li>[ ] empty skipping</li>
+<li>[ ] early stop</li>
+<li>[ ] 实现 cuda 版本</li>
+</ul>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">实时渲染</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">NeRF</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">体渲染</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/NeRF原理与相关论文//" class="article-tag-list-link color2">NeRF原理与相关论文</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        <!--  -->
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Win11若干疑难杂症的解决方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -210,7 +573,1045 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Windows</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">疑难杂症</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        <!--  -->
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Real-time Ray Tracing" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/04/07/Real-time%20Ray%20Tracing/">GAMES202 - Real-time Ray Tracing</a>
+    </h1>
+  
+
+        
+        
+        
+        <a href="/2022/04/07/Real-time%20Ray%20Tracing/" class="archive-article-date">
+  	<time datetime="2022-04-06T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-04-07</time>
+</a>
+        
+      </header>
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-时间上的滤波"><a href="#1-时间上的滤波" class="headerlink" title="1 时间上的滤波"></a>1 时间上的滤波</h2><ul>
+<li>关键思路<ul>
+<li>假设上一帧已滤波，并重复利用上一帧的信息</li>
+<li>利用 motion vector</li>
+<li>SPP 的累积数量是指数递增的</li>
+</ul>
+</li>
+<li>back projection<ul>
+<li>找到当前帧 i 中的像素 x 在第 i - 1 中的像素位置</li>
+<li>第一步：将屏幕空间的点变换到世界空间中<ul>
+<li>可以用 G-buffer 预先储存世界坐标</li>
+<li>如果没有储存，做坐标变换即可：$s = M^{-1}V^{-1}P^{-1}E^{-1}x$</li>
+<li>假设上一帧到这一帧的变换为 $s’ \overset{T}{\rightarrow}s$，则 $s’=T^{-1}s$</li>
+<li>使用上一帧的坐标变换，投影到上一帧的屏幕空间：$x’=E’P’V’M’s’$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>先对当前帧做 spatial 降噪，再与上一帧进行 alpha blend</p>
+<ul>
+<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406151526130.png" alt="image-20220406151526130" style="zoom: 50%;"></li>
+<li>$\alpha$ 一般取 0.1 - 0.2</li>
+</ul>
+</li>
+<li><p>存在的问题</p>
+<ul>
+<li>切换场景 / 场景的第一帧<ul>
+<li>场景、光照的突变</li>
+</ul>
+</li>
+<li>倒退着走的情况<ul>
+<li>从屏幕边缘新出现的点在上一帧没有出现</li>
+</ul>
+</li>
+<li>突然改变的遮挡关系 (disocclusion)<ul>
+<li>上一帧的某个被挡住的物体在这一帧出现了</li>
+<li>本质原因：G-buffer 只储存了屏幕空间的信息</li>
+<li>如果强行使用上一帧信息，会出现残影</li>
+<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406152814409.png" alt="image-20220406152814409" style="zoom:67%;"></li>
+</ul>
+</li>
+<li>shading 带来的问题<ul>
+<li>阴影</li>
+<li>glossy 材质</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>解决办法</p>
+<ul>
+<li>Clamping<ul>
+<li>先将上一帧的结果 clamp 到接近当前帧的结果，再进行混合</li>
+</ul>
+</li>
+<li>Detection<ul>
+<li>检测上一帧的像素是否可用<ul>
+<li>eg. 记录一个 object ID，检测上一帧对应的物体是否与当前帧相同</li>
+</ul>
+</li>
+<li>如果发现上一帧不可用，调整 $\alpha$ 的值，增大当前帧的权重</li>
+<li>新带来的问题：引入了更多当前帧的噪声</li>
+</ul>
+</li>
+<li>Temporally Reliable Motion Vectors for Real-time Ray Tracing, Eurographics 2021</li>
+</ul>
+</li>
+</ul>
+        
+          <!-- <a class="article-more-a" href="/2022/04/07/Real-time%20Ray%20Tracing/#more">文章详情 >></a> -->
+          <span class="article-more-left-link">
+          <a class="article-more-a" href="/2022/04/07/Real-time%20Ray%20Tracing/">文章详情 >></a>
+          </span>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GAMES202</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">环境光</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">GI</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">IBL</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">实时渲染</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/图形学入门笔记//" class="article-tag-list-link color3">图形学入门笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        <!--  -->
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Global Illumination" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/04/01/Global%20Illumination/">GAMES202 - Global Illumination</a>
+    </h1>
+  
+
+        
+        
+        
+        <a href="/2022/04/01/Global%20Illumination/" class="archive-article-date">
+  	<time datetime="2022-03-31T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-04-01</time>
+</a>
+        
+      </header>
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-实时全局光照"><a href="#1-实时全局光照" class="headerlink" title="1 实时全局光照"></a>1 实时全局光照</h2><h3 id="1-1-简介"><a href="#1-1-简介" class="headerlink" title="1.1 简介"></a>1.1 简介</h3><ul>
+<li>实时渲染中，一般考虑 one-bounce 的间接光照</li>
+<li>把被光源直接照亮的表面看作新的光源(secondary light)</li>
+<li>我们需要知道什么信息来计算间接光照？<ul>
+<li>哪些surface patch是被光源照亮的？<ul>
+<li>可以由shadow map找到</li>
+</ul>
+</li>
+<li>这些patch的贡献是多少？<ul>
+<li>把每个patch看做面光源</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-2-辐射度量学"><a href="#1-2-辐射度量学" class="headerlink" title="1.2 辐射度量学"></a>1.2 辐射度量学</h3><ul>
+<li>Flux / Power<ul>
+<li>总能量大小</li>
+</ul>
+</li>
+<li>Radiant Intensity<ul>
+<li>单位立体角上的能量大小</li>
+</ul>
+</li>
+<li>Irradiance<ul>
+<li>单位面积上的能量大小</li>
+</ul>
+</li>
+<li>Radiance<ul>
+<li>单位面积、单位立体角上的能量大小</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-Reflective-Shadow-Map-RSM"><a href="#2-Reflective-Shadow-Map-RSM" class="headerlink" title="2 Reflective Shadow Map (RSM)"></a>2 Reflective Shadow Map (RSM)</h2><ul>
+<li><p>3D 空间的实时全局光照</p>
+</li>
+<li><p>把 shadow map 上的每一个 texel 都认为是一个次级光源</p>
+</li>
+<li><p>假设：认为所有的反射物（次级光源）都是 diffuse 的</p>
+<ul>
+<li>shading point可能从各个方向看向次级光源，通过该假设可以简化计算</li>
+</ul>
+</li>
+</ul>
+        
+          <!-- <a class="article-more-a" href="/2022/04/01/Global%20Illumination/#more">文章详情 >></a> -->
+          <span class="article-more-left-link">
+          <a class="article-more-a" href="/2022/04/01/Global%20Illumination/">文章详情 >></a>
+          </span>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GAMES202</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">GI</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">实时渲染</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/图形学入门笔记//" class="article-tag-list-link color3">图形学入门笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        <!--  -->
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Environment Lighting" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/31/Environment%20Lighting/">GAMES202 - Environment Lighting</a>
+    </h1>
+  
+
+        
+        
+        
+        <a href="/2022/03/31/Environment%20Lighting/" class="archive-article-date">
+  	<time datetime="2022-03-30T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-31</time>
+</a>
+        
+      </header>
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1 概念"></a>1 概念</h2><ul>
+<li>用一张图来记录在场景中往任意方向看，可以看到的光照</li>
+<li>认为光照来自于无限远</li>
+<li>储存方式<ul>
+<li>Spherical Map</li>
+<li>Cube Map</li>
+</ul>
+</li>
+<li>仍然需要对渲染方程进行求解</li>
+<li>对于环境光问题，近似求解渲染方程的办法：<ul>
+<li>Image-Based Lighting (IBL)</li>
+<li>Precomputed Radiance Transfer (PRT)</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-Image-Based-Lighting-IBL"><a href="#2-Image-Based-Lighting-IBL" class="headerlink" title="2 Image-Based Lighting (IBL)"></a>2 Image-Based Lighting (IBL)</h2><ul>
+<li>通用解法：蒙特卡洛积分 → 慢！</li>
+</ul>
+<blockquote>
+<p>如果 shader 里出现了采样，一般认为是无法用在实时渲染中的； 但由于最近降噪方法的兴起，一部分采样算法能在实时渲染中使用了</p>
+</blockquote>
+<ul>
+<li><p>使用之前的重要近似方案</p>
+<ul>
+<li>如果 BRDF 是 glossy 的，那么有效的积分域将会很小；</li>
+<li><p>如果 BRDF 是 diffuse 的，那么它的函数值变化是非常smooth的</p>
+<p><img src="/2022/03/31/Environment%20Lighting/2F671e457f-ea0f-47d3-8444-321cdc29a821-2FUntitled.png" alt="img"></p>
+</li>
+</ul>
+</li>
+<li><p>回顾重要近似</p>
+<p>  <img src="/2022/03/31/Environment%20Lighting/2Fa383c1ec-fbfe-4f49-b3ad-ff99bc334557-2FUntitled.png" alt="img"></p>
+</li>
+<li><p>工业界把这种拆分方法叫做 Split Sum</p>
+<p>  <img src="/2022/03/31/Environment%20Lighting/2Fd113e8e5-149a-44bd-afaa-df2d8a24b98d-2FUntitled.png" alt="img"></p>
+</li>
+</ul>
+        
+          <!-- <a class="article-more-a" href="/2022/03/31/Environment%20Lighting/#more">文章详情 >></a> -->
+          <span class="article-more-left-link">
+          <a class="article-more-a" href="/2022/03/31/Environment%20Lighting/">文章详情 >></a>
+          </span>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GAMES202</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">环境光</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">GI</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">IBL</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">实时渲染</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/图形学入门笔记//" class="article-tag-list-link color3">图形学入门笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        <!--  -->
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Faster Inference_20220324" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/24/Faster%20Inference_20220324/">NeRF Faster Inference 调研（2）</a>
+    </h1>
+  
+
+        
+        
+        
+        <a href="/2022/03/24/Faster%20Inference_20220324/" class="archive-article-date">
+  	<time datetime="2022-03-23T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-24</time>
+</a>
+        
+      </header>
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="汇总"><a href="#汇总" class="headerlink" title="汇总"></a>汇总</h2><ul>
+<li><a href="#Plenoxels-Radiance-Fields-without-Neural-Networks">Plenoxels</a></li>
+<li><a href="#Direct-Voxel-Grid-Optimization-Super-fast-Convergence-for-Radiance-Fields-Reconstruction">DVGO</a></li>
+<li><a href="#NeX-Real-time-View-Synthesis-with-Neural-Basis-Expansion">NeX</a></li>
+<li><a href="#Baking-Neural-Radiance-Fields-for-Real-Time-View-Synthesis">SNeRG</a></li>
+</ul>
+<h2 id="Plenoxels-Radiance-Fields-without-Neural-Networks"><a href="#Plenoxels-Radiance-Fields-without-Neural-Networks" class="headerlink" title="Plenoxels: Radiance Fields without Neural Networks"></a>Plenoxels: Radiance Fields without Neural Networks</h2><h3 id="Info"><a href="#Info" class="headerlink" title="Info"></a>Info</h3><ul>
+<li>会议：CVPR</li>
+<li>年份：2022</li>
+<li><a target="_blank" rel="noopener" href="https://alexyu.net/plenoxels/?s=09">https://alexyu.net/plenoxels/?s=09</a></li>
+</ul>
+<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><ul>
+<li><p><img src="/2022/03/24/Faster%20Inference_20220324/image-20220323220157130.png" alt="image-20220323220157130"></p>
+</li>
+<li><p>不使用神经网络</p>
+</li>
+<li>场景用 voxel 表达，每个 voxel 的顶点处存储球谐函数的系数<ul>
+<li>使用了 <strong>2 阶球谐函数</strong>，共 9 个系数 -&gt; 尝试用小波函数优化？</li>
+<li>GAMES202 课件：一般情况下，使用 4 阶 16 个 SH 函数</li>
+</ul>
+</li>
+<li>渲染时，每个 voxel 对应的颜色值通过插值得到</li>
+<li>loss：MSE + variation</li>
+<li>核心工作是加速训练过程</li>
+<li>该论文的结果表明：NeRF 的关键在于可微分的 volume rendering 部分，而不是神经网络</li>
+</ul>
+<h3 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h3><ul>
+<li>只对比了训练时间和图像质量，未给出测试时的帧率等数据</li>
+<li><img src="/2022/03/24/Faster%20Inference_20220324/image-20220323220836486.png" alt="image-20220323220836486" style="zoom:67%;"></li>
+</ul>
+        
+          <!-- <a class="article-more-a" href="/2022/03/24/Faster%20Inference_20220324/#more">文章详情 >></a> -->
+          <span class="article-more-left-link">
+          <a class="article-more-a" href="/2022/03/24/Faster%20Inference_20220324/">文章详情 >></a>
+          </span>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">实时渲染</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">NeRF</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/NeRF原理与相关论文//" class="article-tag-list-link color2">NeRF原理与相关论文</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        <!--  -->
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Real-time shadows" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/23/Real-time%20shadows/">GAMES202 - Real-time shadows</a>
+    </h1>
+  
+
+        
+        
+        
+        <a href="/2022/03/23/Real-time%20shadows/" class="archive-article-date">
+  	<time datetime="2022-03-22T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-23</time>
+</a>
+        
+      </header>
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-Shadow-Mapping"><a href="#1-Shadow-Mapping" class="headerlink" title="1 Shadow Mapping"></a>1 Shadow Mapping</h2><ul>
+<li>渲染两趟(2-pass)</li>
+<li>是一个图像空间中的算法</li>
+<li>Pass 1<ul>
+<li>从光源位置渲染场景，输出离光源最近的深度，即为shadow map</li>
+</ul>
+</li>
+<li>Pass 2<ul>
+<li>从相机出发，先找到当前像素位置看到的物体表面位置</li>
+<li>从该位置向光源方向投影到shadow map上，查找是否被遮挡</li>
+</ul>
+</li>
+<li>相较于shadow ray的优势<ul>
+<li>shadow ray在每个交点处对所有光源发射，每发射一次都要与场景求交，开销大</li>
+<li>shadow map只需要在第一趟求交，之后判断遮挡只需要查询shadow map</li>
+</ul>
+</li>
+<li>优点<ul>
+<li>不需要了解场景的实际几何分布，只需要有shadow map</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>shadow map将场景的深度分布离散化，在一个像素区域内深度值为常数</li>
+<li>容易造成自遮挡、锯齿</li>
+</ul>
+</li>
+<li>自遮挡解决办法<ul>
+<li>增加小量bias，只有距离超过bias才认为被遮挡</li>
+<li>bias可以为变量，例如根据夹角动态地调整</li>
+<li>如果bias过大，会造成不接触的阴影(detached)</li>
+</ul>
+</li>
+<li>Second-depth shadow mapping<ul>
+<li>在shadow map中储存第二小的深度</li>
+<li>将最小深度和第二小深度的中间值作为深度比较的参考值</li>
+<li>解决自遮挡问题，并且不需要引入bias</li>
+<li>缺点<ul>
+<li>模型必须封闭(watertight)</li>
+<li>维护两个最小值，开销更大</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-Shadow-Mapping的数学原理"><a href="#2-Shadow-Mapping的数学原理" class="headerlink" title="2 Shadow Mapping的数学原理"></a>2 Shadow Mapping的数学原理</h2><ul>
+<li><p>实时渲染中，许多不等式都把它看做左右两边近似相等</p>
+</li>
+<li><p><strong>重要近似</strong>：</p>
+<p>  <img src="/2022/03/23/Real-time%20shadows/2F41f44a50-e972-4aae-a0fe-1a60e90ca124-2FUntitled.png" alt="img"></p>
+<ul>
+<li>分母用于将f(x)的积分值归一化</li>
+</ul>
+</li>
+<li><p>什么时候该近似比较准确</p>
+<ul>
+<li>积分区域比较小</li>
+<li>g(x)在积分域范围内变化非常小(smooth)</li>
+</ul>
+</li>
+</ul>
+        
+          <!-- <a class="article-more-a" href="/2022/03/23/Real-time%20shadows/#more">文章详情 >></a> -->
+          <span class="article-more-left-link">
+          <a class="article-more-a" href="/2022/03/23/Real-time%20shadows/">文章详情 >></a>
+          </span>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GAMES202</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">实时渲染</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">shadow</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/图形学入门笔记//" class="article-tag-list-link color3">图形学入门笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        <!--  -->
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Faster Inference_20220317" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/17/Faster%20Inference_20220317/">NeRF Faster Inference 调研（1）</a>
+    </h1>
+  
+
+        
+        
+        
+        <a href="/2022/03/17/Faster%20Inference_20220317/" class="archive-article-date">
+  	<time datetime="2022-03-16T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-17</time>
+</a>
+        
+      </header>
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="汇总"><a href="#汇总" class="headerlink" title="汇总"></a>汇总</h2><ul>
+<li>cache —— 预计算<ul>
+<li><a href="#PlenOctrees-for-Real-time-Rendering-of-Neural-Radiance-Fields"><strong>PlenOctrees</strong></a></li>
+<li><a href="#FastNeRF-High-Fidelity-Neural-Rendering-at-200FPS"><strong>FastNeRF</strong></a></li>
+</ul>
+</li>
+<li>分割成子区域<ul>
+<li><a href="#Neural-Geometric-Level-of-Detail-Real-time-Rendering-with-Implicit-3D-Shapes">Neural Geometric LOD</a></li>
+<li><a href="#DeRF-Decomposed-Radiance-Fields">DeRF</a></li>
+<li><a href="#KiloNeRF-Speeding-up-Neural-Radiance-Fields-with-Thousands-of-Tiny-MLPs"><strong>KiloNeRF</strong></a></li>
+</ul>
+</li>
+<li>减少采样次数<ul>
+<li><a href="#DONeRF-Towards-Real-Time-Rendering-of-Compact-Neural-Radiance-Fields-using-Depth-Oracle-Networks">DONeRF</a></li>
+<li><a href="#Neural-Sparse-Voxel-Fields">Neural Sparse Voxel Fields</a></li>
+<li><a href="#Light-Field-Networks-Neural-Scene-Representations-with-Single-Evaluation-Rendering"><strong>Light Field Networks</strong></a></li>
+</ul>
+</li>
+<li>加快积分过程<ul>
+<li><a href="#AutoInt-Automatic-Integration-for-Fast-Neural-Volume-Rendering">AutoInt</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="PlenOctrees-for-Real-time-Rendering-of-Neural-Radiance-Fields"><a href="#PlenOctrees-for-Real-time-Rendering-of-Neural-Radiance-Fields" class="headerlink" title="PlenOctrees for Real-time Rendering of Neural Radiance Fields"></a>PlenOctrees for Real-time Rendering of Neural Radiance Fields</h2><h3 id="Info"><a href="#Info" class="headerlink" title="Info"></a>Info</h3><ul>
+<li>会议：ICCV</li>
+<li>年份：2021</li>
+</ul>
+<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><ul>
+<li>训练一个 NeRF-SH 网络<ul>
+<li>将原来的 color 输出改为了球谐函数</li>
+<li>球谐函数可以用来表示 view-dependent 的表面</li>
+<li><img src="/2022/03/17/Faster%20Inference_20220317/image-20220316162044411.png" alt="image-20220316162044411"></li>
+</ul>
+</li>
+<li>把该网络转化成一个八叉树<ul>
+<li>对场景中的点进行采样，根据网络预测的 density 构建八叉树<ul>
+<li>叶结点中存放当前位置的球谐函数系数</li>
+</ul>
+</li>
+<li>构建好八叉树结构后，利用训练样本优化叶结点中的值（Fine-tuning）</li>
+<li>渲染时不需要经过网络，只需要访问叶结点</li>
+<li><img src="/2022/03/17/Faster%20Inference_20220317/image-20220316162536788.png" alt="image-20220316162536788"></li>
+</ul>
+</li>
+</ul>
+<h3 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h3><ul>
+<li>渲染速度大概是原版 NeRF 的 3000 倍</li>
+</ul>
+<p><img src="/2022/03/17/Faster%20Inference_20220317/image-20220316163314696.png" alt="image-20220316163314696"></p>
+        
+          <!-- <a class="article-more-a" href="/2022/03/17/Faster%20Inference_20220317/#more">文章详情 >></a> -->
+          <span class="article-more-left-link">
+          <a class="article-more-a" href="/2022/03/17/Faster%20Inference_20220317/">文章详情 >></a>
+          </span>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">实时渲染</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">NeRF</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/NeRF原理与相关论文//" class="article-tag-list-link color2">NeRF原理与相关论文</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        <!--  -->
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Recap of CG basics" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/12/Recap%20of%20CG%20basics/">GAMES202 - Recap of CG basics</a>
+    </h1>
+  
+
+        
+        
+        
+        <a href="/2022/03/12/Recap%20of%20CG%20basics/" class="archive-article-date">
+  	<time datetime="2022-03-11T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-12</time>
+</a>
+        
+      </header>
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-渲染管线"><a href="#1-渲染管线" class="headerlink" title="1 渲染管线"></a>1 渲染管线</h2><ul>
+<li>顶点处理<ul>
+<li>变换，将世界坐标中的顶点投影到屏幕空间上</li>
+</ul>
+</li>
+<li>三角形处理<ul>
+<li>顶点间的连接关系不变，在屏幕上连接三角形</li>
+</ul>
+</li>
+<li>光栅化<ul>
+<li>将三角形离散成屏幕上的像素，称为片段(fragment)</li>
+</ul>
+</li>
+<li>片段处理<ul>
+<li>片段着色、纹理映射</li>
+</ul>
+</li>
+<li>输出帧图像</li>
+</ul>
+<h2 id="2-OpenGL流程-类比于画油画"><a href="#2-OpenGL流程-类比于画油画" class="headerlink" title="2 OpenGL流程 - 类比于画油画"></a>2 OpenGL流程 - 类比于画油画</h2><ul>
+<li>放置模型<ul>
+<li>模型描述、模型变换</li>
+<li>Vertex buffer object(VBO)<ul>
+<li>一块传给GPU的buffer，存储模型的顶点、法线、纹理坐标</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>放置画架<ul>
+<li>视图变换<ul>
+<li>相机属性</li>
+</ul>
+</li>
+<li>创建framebuffer</li>
+</ul>
+</li>
+<li>将画布放在画架上<ul>
+<li>用同一个framebuffer可以输出多个不同纹理(renderTarget)<ul>
+<li>一个pass里可以输出多张结果：normal、depth等</li>
+<li>用户在fragment shader中决定输出纹理的样式</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>在画布上画画<ul>
+<li>Vertex shader<ul>
+<li>对每个顶点，顶点变换、投影、插值</li>
+</ul>
+</li>
+<li>fragment shader<ul>
+<li>对每个片段，光照、阴影、深度测试</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>可以画多次<ul>
+<li>之前的帧可以作为参考</li>
+</ul>
+</li>
+</ul>
+        
+          <!-- <a class="article-more-a" href="/2022/03/12/Recap%20of%20CG%20basics/#more">文章详情 >></a> -->
+          <span class="article-more-left-link">
+          <a class="article-more-a" href="/2022/03/12/Recap%20of%20CG%20basics/">文章详情 >></a>
+          </span>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GAMES202</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">实时渲染</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/图形学入门笔记//" class="article-tag-list-link color3">图形学入门笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
 
       
 
@@ -343,649 +1744,10 @@
 
 
   
-    <article id="post-C-11-for-each循环与多维数组" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/28/C-11-for-each%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84/">C++11 - for each 循环与多维数组</a>
-    </h1>
-  
-
-        
-        
-        
-        <a href="/2021/01/28/C-11-for-each%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84/" class="archive-article-date">
-  	<time datetime="2021-01-28T03:22:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-28</time>
-</a>
-        
-      </header>
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-for-each循环"><a href="#1-for-each循环" class="headerlink" title="1 for each循环"></a>1 for each循环</h2><h3 id="1-1-只读形式"><a href="#1-1-只读形式" class="headerlink" title="1.1 只读形式"></a>1.1 只读形式</h3><p>for each循环语句是在Java和Python语言中一种循环语句。C++11标准也提供了类似的语句，称为<strong>范围for(range for)语句</strong>。为了方便叙述，在后文中这个语句统一称为for each循环语句。</p>
-<p>假设现在我们要遍历数组<code>a</code>中的所有元素并输出。在C++11之前，我们一般会使用下面的for循环语句：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a[<span class="number">10</span>];</span><br><span class="line"><span class="comment">/* ..初始化数组a.. */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    std::cout &lt;&lt; a[i] &lt;&lt; <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用这样的for循环需要提前知道数组<code>a</code>的大小。在C++11标准下，我们可以使用for each循环语句，把上面的代码改写成：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> val : a) &#123;</span><br><span class="line">    std::cout &lt;&lt; val &lt;&lt; <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>for each语句遍历给定序列中的每个元素，并对序列中的每个值执行某种操作。语法形式是：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (declaration : expression) &#123;</span><br><span class="line">    statement</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其中<code>declaration</code>部分定义了一个变量，用于访问序列中的基础元素。由于我们访问的对象是数组中的元素，而数组元素的类型显然是已知的，因此在声明时可以使用<code>auto</code>类型符，让编译器来决定变量c的类型。这样，上面的遍历输出可以改写成：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> val : a) &#123;</span><br><span class="line">    std::cout &lt;&lt; val &lt;&lt; <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>需要注意的是，遍历时我们声明了一个变量来访问数组中的每一个元素。也就是说，每次迭代时，数组中的当前元素会被拷贝给该变量。因此，<strong>这种遍历方式只能对数组元素进行只读操作，无法修改原数组中元素的值。</strong></p>
-<h3 id="1-2-遍历并修改——使用引用"><a href="#1-2-遍历并修改——使用引用" class="headerlink" title="1.2 遍历并修改——使用引用"></a>1.2 遍历并修改——使用引用</h3><p>如果我们想使用for each语句逐一修改数组中的值，应该怎样操作呢？我们使用引用来对数组进行遍历即可。例如，下面的例子将数组<code>a</code>中的每一个值修改为原来的两倍：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> &amp;val : a) &#123;</span><br><span class="line">    val = val * <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当使用引用作为循环控制变量时，这个变量实际上被依次绑定到了序列的每个元素上，因此可以使用该引用修改其绑定的字符。</p>
-<p>如果想使用引用进行只读操作的遍历，我们将引用声明为<code>const</code>属性即可，例如：</p>
-        
-          <!-- <a class="article-more-a" href="/2021/01/28/C-11-for-each%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84/#more">文章详情 >></a> -->
-          <span class="article-more-left-link">
-          <a class="article-more-a" href="/2021/01/28/C-11-for-each%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84/">文章详情 >></a>
-          </span>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">C++</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/编程语言学习//" class="article-tag-list-link color2">编程语言学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        <!--  -->
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-红黑树的C-实现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/26/%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84C-%E5%AE%9E%E7%8E%B0/">红黑树的 C++ 实现</a>
-    </h1>
-  
-
-        
-        
-        
-        <a href="/2021/01/26/%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84C-%E5%AE%9E%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2021-01-26T02:48:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-26</time>
-</a>
-        
-      </header>
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>之前我们分析了红黑树的原理和操作算法，现在我们来用C++语言实现一个基本的红黑树结构。<strong>在后文的插入和删除操作中提到的各种情况，详细描述请参见<a href="/2021/01/22/%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" title="红黑树的原理和算法分析">上一篇文章</a>。</strong></p>
-<blockquote>
-<p>具体代码可参考<a target="_blank" rel="noopener" href="https://github.com/LumiOwO/DS-Playground/blob/master/include/tree/RBTree.h">https://github.com/LumiOwO/DS-Playground/blob/master/include/tree/RBTree.h</a></p>
-</blockquote>
-<h2 id="1-数据结构定义"><a href="#1-数据结构定义" class="headerlink" title="1 数据结构定义"></a>1 数据结构定义</h2><p>首先，为红黑树结点的颜色定义一个枚举：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// Enumeration for node color.</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">RBColor</span> &#123; BLACK, RED &#125;;</span><br></pre></td></tr></table></figure>
-<p>之后定义红黑树结点<code>RBTreeNode</code>模板类。这里我额外增加了模板参数<code>ALLOW_DUP</code>，该参数表示是否允许结点出现相同的值。具体实现这个类时，我考虑了以下几点：</p>
-<ul>
-<li>在这个类中，指向左右子树的指针使用的是C++11标准提供的智能指针，这样就不需要在程序结束后手动释放申请的结点内存了；</li>
-<li>由于在插入和删除过程中都需要根据当前结点找到父结点的位置，因此在结点中加入指向父结点的指针；</li>
-<li>为了避免<code>shared_ptr</code>循环引用，指向父结点的指针应该使用<code>weak_ptr</code>；</li>
-<li>将指向<code>RBTreeNode</code>类的智能指针重命名为<code>RBTree</code></li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="type">bool</span> ALLOW_DUP = <span class="literal">false</span>&gt;</span><br><span class="line"><span class="keyword">class</span> RBTreeNode &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">/// 重命名shared_ptr智能指针</span></span><br><span class="line">    <span class="keyword">using</span> RBTree = std::shared_ptr&lt;RBTreeNode&lt;T, ALLOW_DUP&gt;&gt;;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/// 结点颜色</span></span><br><span class="line">    RBColor _color;</span><br><span class="line">    <span class="comment">/// 结点值</span></span><br><span class="line">    T _value;</span><br><span class="line">    <span class="comment">/// 指向父结点的指针，应使用weak_ptr</span></span><br><span class="line">    std::weak_ptr&lt;RBTreeNode&lt;T, ALLOW_DUP&gt;&gt; _parent;</span><br><span class="line">    <span class="comment">/// 左子树</span></span><br><span class="line">    RBTree _left;</span><br><span class="line">    <span class="comment">/// 右子树</span></span><br><span class="line">    RBTree _right;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// 构造函数</span></span><br><span class="line">    <span class="comment">/* ...省略... */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/// 析构函数</span></span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">RBTreeNode</span>() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">IsRoot</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> !_parent.<span class="built_in">lock</span>(); &#125;</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">IsLeaf</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> !_left &amp;&amp; !_right; &#125;</span><br><span class="line"></span><br><span class="line">&#125;; <span class="comment">///&lt; class RBTreeNode</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在类的外面需要再次重命名指向结点的智能指针</span></span><br><span class="line"><span class="comment">// 否则只能通过RBTreeNode::RBTree访问这个指针类的名字</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="type">bool</span> ALLOW_DUP = <span class="literal">false</span>&gt;</span><br><span class="line"><span class="keyword">using</span> RBTree = std::shared_ptr&lt;RBTreeNode&lt;T, ALLOW_DUP&gt;&gt;;</span><br></pre></td></tr></table></figure>
-<h2 id="2-Inline函数"><a href="#2-Inline函数" class="headerlink" title="2 Inline函数"></a>2 Inline函数</h2><p>主要有两个Inline函数：<code>IsBlack()</code>和<code>IsRed()</code>，用来判断结点的颜色。之所以不把这两个函数写成结点的成员函数，是因为<strong>空的NIL结点将被看做黑色的结点</strong>，而访问空指针的成员函数将会报错。换句话说，如果在代码中用<code>IsRed()</code>函数判断出一个结点为红色，则该指针必不为空指针。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="type">bool</span> ALLOW_DUP&gt;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">bool</span> <span class="title">IsBlack</span><span class="params">(RBTree&lt;T, ALLOW_DUP&gt; p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> !p || p-&gt;_color == BLACK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="type">bool</span> ALLOW_DUP&gt;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">bool</span> <span class="title">IsRed</span><span class="params">(RBTree&lt;T, ALLOW_DUP&gt; p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> !<span class="built_in">IsBlack</span>(p);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="3-搜索"><a href="#3-搜索" class="headerlink" title="3 搜索"></a>3 搜索</h2><p>搜索过程和在二叉搜索树中查找目标值的过程相同。这里给出非递归的搜索代码：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="type">bool</span> ALLOW_DUP&gt;</span><br><span class="line"><span class="function">RBTree&lt;T, ALLOW_DUP&gt; <span class="title">Search</span><span class="params">(<span class="type">const</span> RBTree&lt;T, ALLOW_DUP&gt; &amp;root, T value)</span> </span>&#123;</span><br><span class="line">    RBTree&lt;T, ALLOW_DUP&gt; cur = root;</span><br><span class="line">    <span class="keyword">while</span> (cur) &#123;</span><br><span class="line">        <span class="keyword">if</span> (value == cur-&gt;_value) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (value &lt; cur-&gt;_value) &#123;</span><br><span class="line">            cur = cur-&gt;_left;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            cur = cur-&gt;_right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> cur;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="4-旋转"><a href="#4-旋转" class="headerlink" title="4 旋转"></a>4 旋转</h2><p>旋转操作分为左旋和右旋。这里以左旋为例。</p>
-        
-          <!-- <a class="article-more-a" href="/2021/01/26/%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84C-%E5%AE%9E%E7%8E%B0/#more">文章详情 >></a> -->
-          <span class="article-more-left-link">
-          <a class="article-more-a" href="/2021/01/26/%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84C-%E5%AE%9E%E7%8E%B0/">文章详情 >></a>
-          </span>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">C++</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">树</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/数据结构和算法//" class="article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        <!--  -->
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-红黑树的原理和算法分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/22/%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/">红黑树的原理和算法分析</a>
-    </h1>
-  
-
-        
-        
-        
-        <a href="/2021/01/22/%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" class="archive-article-date">
-  	<time datetime="2021-01-22T11:52:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-22</time>
-</a>
-        
-      </header>
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>红黑树是一种自平衡二叉搜索树。由于其良好的特性，红黑树被广泛应用于许多地方，例如C++的STL容器以及Linux的非实时任务调度。本文将对红黑树的原理和各种操作算法进行分析。</p>
-<h2 id="1-定义"><a href="#1-定义" class="headerlink" title="1 定义"></a>1 定义</h2><p>红黑树的示意图如下：</p>
-<p><img src="/2021/01/22/%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/image-20210122110514499.png" alt="image-20210122110514499" style="zoom:67%;"></p>
-<p>首先，红黑树必须是一棵<strong>二叉搜索树</strong>。同时，红黑树必须满足以下5条性质：</p>
-<ul>
-<li><p><strong>性质1：</strong>每个结点要么是<b style="color: black">黑色</b>的，要么是<b style="color: red">红色</b>的；</p>
-</li>
-<li><p><strong>性质2：</strong>根节点必须是<b style="color: black">黑色</b>的；</p>
-</li>
-<li><p><strong>性质3：</strong>每个“叶子结点”都是<b style="color: black">黑色</b>的；</p>
-<p>  容易混淆的是，这里的“叶子结点”并不是我们通常理解的叶结点，而是指空指针结点NIL，所以我们在很多文章中看到的红黑树是下面这个样子的：</p>
-<p>  <img src="/2021/01/22/%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/image-20210122112158621.png" alt="image-20210122112158621" style="zoom:67%;"></p>
-<p>  <strong>Tips:</strong> 个人认为，把NIL结点看做叶子结点非常容易把自己搞晕。。所以这条性质可以理解为这样：<strong>如果一个结点的某个子树为空，则假设这个空子树的位置有一个黑色的结点</strong>。在后面的红黑树操作分析中，我们可以更好地理解这一条性质。</p>
-</li>
-<li><p><strong>性质4：</strong>如果一个结点是<b style="color: red">红色</b>的，那么它的两个子结点必须是<b style="color: black">黑色</b>的；</p>
-<p>  推论：1. 从任一结点到叶结点的路径上不能出现两个连续的<b style="color: red">红色</b>结点；2. <b style="color: red">红色</b>结点的父结点必须是<b style="color: black">黑色</b>的。</p>
-</li>
-<li><p><b style="color: red; background: yellow">性质5</b>：对于每个结点，从该结点到子树上叶结点的任意一条路径上，经过的<b style="color: black">黑色</b>结点数量相同。</p>
-<p>  这条性质是红黑树最重要的性质，它确保了红黑树中任意一条路径的长度都不会超过其他路径长度的两倍。因此，红黑树是一棵相对接近平衡的二叉树，性能较好。</p>
-<p>  为了保持这5条性质，我们在插入和删除等操作中需要对红黑树的结构进行相应的调整。</p>
-</li>
-</ul>
-<blockquote>
-<p>推荐大家看看这个知乎回答：为什么这么多关于红黑树的面试题呢？ - 敖丙的回答 - 知乎 <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/312327402/answer/1560653215">https://www.zhihu.com/question/312327402/answer/1560653215</a></p>
-<p>这位大佬比较硬核地解释了红黑树的一些原理，包括2-3-4树模型和红黑树的联系等，看完后会对红黑树有更深的理解！</p>
-</blockquote>
-<h2 id="2-查找-搜索"><a href="#2-查找-搜索" class="headerlink" title="2 查找 / 搜索"></a>2 查找 / 搜索</h2><p>红黑树是一棵二叉搜索树，因此查找操作和普通的二叉搜索树类似，流程如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 搜索值为val的结点</span></span><br><span class="line">当前结点 = 根结点</span><br><span class="line"><span class="keyword">if</span>(val == 当前结点值) &#123;</span><br><span class="line">    返回当前结点</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(val &lt; 当前结点值) &#123;</span><br><span class="line">    在左子树中递归寻找</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    在右子树中递归寻找</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="3-旋转"><a href="#3-旋转" class="headerlink" title="3 旋转"></a>3 旋转</h2><p>在之后对红黑树的结构调整操作中，我们可能需要<strong>对某两个结点</strong>进行旋转操作，以调节它们的上下关系，使左右子树相对平衡。例如，下面是对结点2进行<strong>左旋</strong>操作的示意图。注意结点2和结点4的上下关系：</p>
-        
-          <!-- <a class="article-more-a" href="/2021/01/22/%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/#more">文章详情 >></a> -->
-          <span class="article-more-left-link">
-          <a class="article-more-a" href="/2021/01/22/%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/">文章详情 >></a>
-          </span>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">树</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/数据结构和算法//" class="article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        <!--  -->
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-C-11-类型别名和类型推断：typedef、using、auto、decltype" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/19/C-11-%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D%E5%92%8C%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD%EF%BC%9Atypedef%E3%80%81using%E3%80%81auto%E3%80%81decltype/">C++11 - 类型别名和类型推断：typedef、using、auto、decltype</a>
-    </h1>
-  
-
-        
-        
-        
-        <a href="/2021/01/19/C-11-%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D%E5%92%8C%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD%EF%BC%9Atypedef%E3%80%81using%E3%80%81auto%E3%80%81decltype/" class="archive-article-date">
-  	<time datetime="2021-01-19T08:58:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-19</time>
-</a>
-        
-      </header>
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近在读第5版的《C++ Primer》，发现C++11标准中有很多非常实用的新特性。这里简单总结下C++11标准中处理变量类型的一些特性。</p>
-<h2 id="1-类型别名"><a href="#1-类型别名" class="headerlink" title="1 类型别名"></a>1 类型别名</h2><h3 id="1-1-typedef"><a href="#1-1-typedef" class="headerlink" title="1.1 typedef"></a>1.1 <code>typedef</code></h3><p><code>typedef</code>关键字在C++11之前就可以使用，作用是定义一个类型的别名，换句话说，它是某种类型的同义词。例如：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">double</span> wages;  <span class="comment">// wages是double的同义词</span></span><br></pre></td></tr></table></figure>
-<p>这样<code>wages</code>就成为了<code>double</code>的一个别名。只要是类型名能出现的地方，就能够使用类型的别名：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">double</span> a = <span class="number">1.2</span>;</span><br><span class="line">wages b = <span class="number">2.3</span>;</span><br></pre></td></tr></table></figure>
-<p><code>typedef</code>在给指针起别名的时候会遇到一些容易混淆的地方。</p>
-<h4 id="1-1-1-与宏定义的区别"><a href="#1-1-1-与宏定义的区别" class="headerlink" title="1.1.1 与宏定义的区别"></a>1.1.1 与宏定义的区别</h4><p>下面的代码将<code>pstring</code>作为<code>char*</code>类型的别名，并定义一个常指针变量<code>cstr</code>：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">char</span> *pstring;</span><br><span class="line"><span class="type">const</span> pstring cstr = <span class="literal">nullptr</span>;</span><br></pre></td></tr></table></figure>
-<p>因此变量<code>cstr</code>的数据类型为<code>const pstring</code>，意味着该指针是常量，不能修改指针所指的位置，但是可以通过该指针修改指针指向的字符内容。</p>
-<p>类似地，如果使用宏定义来声明<code>pstring</code>，即：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> pstring char*</span></span><br><span class="line"><span class="type">const</span> pstring cstr = <span class="literal">nullptr</span>;</span><br></pre></td></tr></table></figure>
-<p>由于在编译预处理过程中，代码中的<code>pstring</code>文本会被替换为<code>char*</code>，因此这段代码等价于：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">char</span>* cstr = <span class="literal">nullptr</span>;</span><br></pre></td></tr></table></figure>
-<p>也就是说，这样定义出来的变量<code>cstr</code>为指向<code>const char</code>数据类型的指针，即指针所指的位置可以修改，但是不可以通过该指针修改指向的字符内容。</p>
-<h4 id="1-1-2-函数指针的别名"><a href="#1-1-2-函数指针的别名" class="headerlink" title="1.1.2 函数指针的别名"></a>1.1.2 函数指针的别名</h4><p><code>typedef</code>最容易用错的时候是在给复杂的数据类型命名时，比如函数指针。例如我们要为下面这个函数的函数指针起一个别名<code>pfunc</code>：</p>
-        
-          <!-- <a class="article-more-a" href="/2021/01/19/C-11-%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D%E5%92%8C%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD%EF%BC%9Atypedef%E3%80%81using%E3%80%81auto%E3%80%81decltype/#more">文章详情 >></a> -->
-          <span class="article-more-left-link">
-          <a class="article-more-a" href="/2021/01/19/C-11-%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D%E5%92%8C%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD%EF%BC%9Atypedef%E3%80%81using%E3%80%81auto%E3%80%81decltype/">文章详情 >></a>
-          </span>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">C++</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/编程语言学习//" class="article-tag-list-link color2">编程语言学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        <!--  -->
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-CMake-单元测试和GoogleTest简单使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/17/CMake-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E5%92%8CGoogleTest%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">CMake - 单元测试和 GoogleTest 简单使用</a>
-    </h1>
-  
-
-        
-        
-        
-        <a href="/2021/01/17/CMake-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E5%92%8CGoogleTest%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/" class="archive-article-date">
-  	<time datetime="2021-01-17T12:50:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-17</time>
-</a>
-        
-      </header>
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>单元测试是项目中非常重要的一个环节。在开发的过程中，应该养成每实现一个小模块就相应地做一系列单元测试的习惯，以保证该模块的正确性。这篇文章将简单介绍GTest框架以及如何利用CMake为自己的项目添加单元测试模块。</p>
-<h2 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h2><p> Windows + gcc 4.9.2 + GNUWin32，使用VS Code的CMake Tools插件 </p>
-<h2 id="1-CMake集成的测试工具——CTest"><a href="#1-CMake集成的测试工具——CTest" class="headerlink" title="1 CMake集成的测试工具——CTest"></a>1 CMake集成的测试工具——CTest</h2><p>要使用CTest，用户需要先写一份测试代码。通常我们会使用一些测试框架来辅助我们进行测试（如下面的GTest），但这里我们先用最原始的方式，即在代码中使用<code>assert()</code>语句来判断结果的正确性，类似下面这样：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// test.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cassert&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">assert</span>(<span class="number">2</span> * <span class="number">3</span> == <span class="number">6</span>);  <span class="comment">// true</span></span><br><span class="line">    <span class="built_in">assert</span>(<span class="number">2</span> * <span class="number">3</span> == <span class="number">5</span>);  <span class="comment">// false</span></span><br><span class="line">    <span class="built_in">assert</span>( <span class="comment">/* Expression */</span> )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用<code>assert()</code>的目的是当测试结果不正确时，测试程序会终止，从而能被CTest检测到该测试程序是否正常结束。</p>
-<p>在<code>CMakeLists.txt</code>文件中，首先将我们设计的功能代码添加为库文件，例如，</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_library</span>(hello_lib hello.cpp)</span><br></pre></td></tr></table></figure>
-<p>之后，开启CTest测试模块，</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enable_testing</span>()</span><br></pre></td></tr></table></figure>
-<p>然后添加一个用于测试的可执行文件，并将需要测试的库文件链接到该可执行文件上，</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_executable</span>(hello_test <span class="keyword">test</span>.cpp)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(hello_test</span><br><span class="line">    hello_lib</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>最后，使用<code>add_test()</code>函数为CTest添加一个测试项，</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_test</span>(test1 hello_test)</span><br></pre></td></tr></table></figure>
-<p><code>add_test()</code>函数的参数形式可以更加复杂，详细可以参阅<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/add_test.html">CMake的官方文档</a>。这里是一种简单用法，第一个参数是该测试项的名字，第二个参数是该测试项对应的可执行文件的名字。因为这两个参数指代的对象不同，所以即便它们像下面这样名称相同，CMake也不会报错：</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_test</span>(hello_test hello_test)</span><br></pre></td></tr></table></figure>
-<p>之后建立<code>build</code>目录并构建CMake项目。这里我使用了VS Code的CMake Tools插件帮我完成了这个步骤。</p>
-<p>进入<code>build</code>目录，输入<code>make test</code>命令，就能看到CTest的测试结果。测试通过时输出如下所示：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">D:/example/build&gt; make test</span><br><span class="line">Running tests...</span><br><span class="line">Test project D:/example/build</span><br><span class="line">    Start 1: Test1</span><br><span class="line">1/2 Test #1: Test1 ............................   Passed    0.42 sec</span><br><span class="line">    Start 2: Test2</span><br><span class="line">2/2 Test #2: Test2 ............................   Passed    0.36 sec</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">100% </span><span class="language-bash">tests passed, 0 tests failed out of 2</span></span><br><span class="line"></span><br><span class="line">Total Test time (real) =   0.82 sec</span><br></pre></td></tr></table></figure>
-<h2 id="2-GTest——GoogleTest"><a href="#2-GTest——GoogleTest" class="headerlink" title="2 GTest——GoogleTest"></a>2 GTest——GoogleTest</h2><p>GoogleTest是Google的开源C++单元测试框架，主要有GTest和GMock两个功能模块。这里简单介绍一下GTest模块的基本用法，GMock模块等以后有机会使用的时候再来研究。</p>
-<h3 id="2-1-集成GTest到项目中"><a href="#2-1-集成GTest到项目中" class="headerlink" title="2.1 集成GTest到项目中"></a>2.1 集成GTest到项目中</h3><p>一般通过以下两种方式可以比较优雅地将GTest集成到项目中：</p>
-        
-          <!-- <a class="article-more-a" href="/2021/01/17/CMake-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E5%92%8CGoogleTest%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/#more">文章详情 >></a> -->
-          <span class="article-more-left-link">
-          <a class="article-more-a" href="/2021/01/17/CMake-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E5%92%8CGoogleTest%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">文章详情 >></a>
-          </span>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">CMake</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">GoogleTest</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/编程语言学习//" class="article-tag-list-link color2">编程语言学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        <!--  -->
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-CMake-基本操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/11/CMake-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">CMake - 基本操作</a>
-    </h1>
-  
-
-        
-        
-        
-        <a href="/2021/01/11/CMake-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" class="archive-article-date">
-  	<time datetime="2021-01-11T03:11:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-11</time>
-</a>
-        
-      </header>
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p> 对github项目<a target="_blank" rel="noopener" href="https://github.com/ttroy50/cmake-examples.git">https://github.com/ttroy50/cmake-examples.git</a> 进行学习总结 </p>
-</blockquote>
-<h2 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h2><p> Windows + gcc 4.9.2 + GNUWin32，使用VS Code的CMake Tools插件 </p>
-<h2 id="1-Out-of-Source-Build"><a href="#1-Out-of-Source-Build" class="headerlink" title="1 Out-of-Source Build"></a>1 Out-of-Source Build</h2><p>在构建CMake项目时，一个非常重要的原则是：不要把构建后生成的文件和源代码混在一起！</p>
-<p>一般采取的做法是在项目根目录下新建一个build目录，然后在build目录中构建Cmake项目。这样如果需要重新构建项目，只需要把build目录删掉再重新构建即可，不会污染原项目的文件结构。</p>
-<p>CMake命令如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">cmake ..    <span class="comment"># 构建CMake项目，生成Makefile文件</span></span><br><span class="line">make        <span class="comment"># 根据Makefile文件生成可执行文件</span></span><br></pre></td></tr></table></figure>
-<p>由于我使用gcc编译并且安装了GNUWin32，因此可以使用make命令生成可执行文件。一般在Windows环境下会默认使用Visual Studio的编译器，这样在执行<code>cmake ..</code> 命令后会生成<code>.sln</code>后缀的VS项目，使用Visual Studio打开并构建工程即可。</p>
-<h2 id="2-最简单的情况-——-Hello-CMake"><a href="#2-最简单的情况-——-Hello-CMake" class="headerlink" title="2 最简单的情况 —— Hello CMake"></a>2 最简单的情况 —— Hello CMake</h2><p>如果我们整个工程里面只有一个源文件main.cpp，CMake文件只需要三行即可：</p>
-        
-          <!-- <a class="article-more-a" href="/2021/01/11/CMake-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/#more">文章详情 >></a> -->
-          <span class="article-more-left-link">
-          <a class="article-more-a" href="/2021/01/11/CMake-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">文章详情 >></a>
-          </span>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">CMake</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/编程语言学习//" class="article-tag-list-link color2">编程语言学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        <!--  -->
-    </div>
-</aside>
-
-
-
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
   
 
 
@@ -996,7 +1758,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2022 LumiOwO
+    		&copy; 2023 LumiOwO
     	</div>
       	<!-- <div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -9179,7 +9941,71 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">GAMES202</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">环境光</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">IBL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">实时渲染</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">NeRF</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">体渲染</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">shadow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">疑难杂症</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">分治</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动态规划</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">图</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">树</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">贪心</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">近似算法</a>
               </li>
             
             <div class="clearfix"></div>
