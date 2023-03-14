@@ -40,7 +40,7 @@ categories: [图形学入门笔记]
 
 - **重要近似**：
 
-    ![img](Real-time%20shadows/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F41f44a50-e972-4aae-a0fe-1a60e90ca124%252FUntitled.png)
+    ![img](Real-time%20shadows/2F41f44a50-e972-4aae-a0fe-1a60e90ca124-2FUntitled.png)
 
     - 分母用于将f(x)的积分值归一化
 
@@ -49,9 +49,11 @@ categories: [图形学入门笔记]
     - 积分区域比较小
     - g(x)在积分域范围内变化非常小(smooth)
 
+<!--More-->
+
 - 利用该近似处理渲染方程
 
-    ![img](Real-time%20shadows/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252Ff8184591-5a31-45db-b1e5-ce76bce36329%252FUntitled.png)
+    ![img](Real-time%20shadows/2Ff8184591-5a31-45db-b1e5-ce76bce36329-2FUntitled.png)
 
     - 把visibility项提出来
     - 左边是visibility，右边是shading
@@ -75,7 +77,7 @@ categories: [图形学入门笔记]
 
 - 例子
 
-    ![img](Real-time%20shadows/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F0cdc7595-ee7e-4140-992b-582a323e5ca6%252FUntitled.png)
+    ![img](Real-time%20shadows/2F0cdc7595-ee7e-4140-992b-582a323e5ca6-2FUntitled.png)
 
 - filter越小，阴影越硬；filter越大，阴影越软
 
@@ -89,13 +91,13 @@ categories: [图形学入门笔记]
 
 - 示意图
 
-    <img src="Real-time%20shadows/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252Fb27bd9d1-a3ef-42a4-b99b-1f84a3f6fb87%252FUntitled.png" alt="img" style="zoom:50%;" align="left"/>
+    <img src="Real-time%20shadows/2Fb27bd9d1-a3ef-42a4-b99b-1f84a3f6fb87-2FUntitled.png" alt="img" style="zoom:50%;" />
 
 - $w_{Penumbra}$越大，阴影越软；其大小与光源宽度$w_{light}$以及blocker在光源与receiver之间的位置有关
 
 - 由相似三角形关系可得：
 
-    ![img](Real-time%20shadows/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252Fe10c9544-b2a1-4610-901b-8e22daf64482%252FUntitled.png)
+    ![img](Real-time%20shadows/2Fe10c9544-b2a1-4610-901b-8e22daf64482-2FUntitled.png)
 
 - 算法流程
 
@@ -113,9 +115,9 @@ categories: [图形学入门笔记]
 
     - 可以根据到面光源的视锥与shadow map的相交区域确定
 
-        ![img](Real-time%20shadows/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F866714e4-ff71-4c50-9cb0-8fd60120f458%252FUntitled.png)
+        ![img](Real-time%20shadows/2F866714e4-ff71-4c50-9cb0-8fd60120f458-2FUntitled.png)
 
-> 符号函数 $\chi^+(x)$ = x > 0 ? 1 : 0
+> 符号函数 $\chi^+(x) = x > 0 ? 1 : 0$
 
 - 开销主要在第2步和第4步中
     - 在区域中查询每一个像素需要花费大量时间
@@ -197,7 +199,7 @@ categories: [图形学入门笔记]
 
     - 展开的越多，越接近PCF得到的准确值
 
-        <img src="Real-time%20shadows/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252Fed7efebf-022b-4ca6-ab8b-5f50400f5780%252FUntitled.png" alt="img" style="zoom:50%;" align="left"/>
+        <img src="Real-time%20shadows/2Fed7efebf-022b-4ca6-ab8b-5f50400f5780-2FUntitled.png" alt="img" style="zoom:50%;" />
 
     - 一般取 4 ，得到一个更准确的近似结果
 
@@ -230,7 +232,7 @@ categories: [图形学入门笔记]
 
     - 使用Ray marching / Sphere tracing 来计算光线与 SDF 的交点
 
-        <img src="Real-time%20shadows/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F89224a95-ff18-4c44-8ffb-fab1d38e2192%252FUntitled.png" alt="img" style="zoom:100%;" align="left"/>
+        <img src="Real-time%20shadows/2F89224a95-ff18-4c44-8ffb-fab1d38e2192-2FUntitled.png" alt="img" style="zoom:100%;" />
 
         - 任意一点的 SDF 值定义了该点处的一个安全距离
         - 在这个安全距离范围内，一定不会与任何物体相交
@@ -238,7 +240,7 @@ categories: [图形学入门笔记]
 
     - 使用SDF生成软阴影
 
-        <img src="Real-time%20shadows/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F8408583c-167e-4d9f-a1ec-f2b8f106ddc1%252FUntitled.png" alt="img" style="zoom:80%;" align="left"/>
+        <img src="Real-time%20shadows/2F8408583c-167e-4d9f-a1ec-f2b8f106ddc1-2FUntitled.png" alt="img" style="zoom:80%;" />
 
         - 可以用 SDF 来得到被遮挡比例的近似值
         - 根据 SDF 给出的安全距离，得到一个对应的安全角度
@@ -255,7 +257,7 @@ categories: [图形学入门笔记]
 
 - 计算安全角度
 
-    <img src="Real-time%20shadows/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252Fc1f748c7-14d6-4fc3-9f8c-b384d5a471a8%252FUntitled.png" alt="img" style="zoom:50%;" align="left"/>
+    <img src="Real-time%20shadows/2Fc1f748c7-14d6-4fc3-9f8c-b384d5a471a8-2FUntitled.png" alt="img" style="zoom:50%;" />
 
     - 在 ray marching 的过程中，每一步都计算当前的安全角度值
     - 取所有角度的最小值，作为最终结果

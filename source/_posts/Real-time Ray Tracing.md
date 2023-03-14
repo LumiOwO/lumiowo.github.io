@@ -1,5 +1,5 @@
 ---
-title: GAMES202 - Environment Lighting
+title: GAMES202 - Real-time Ray Tracing
 date: 2022-04-07
 tags: [GAMES202, 环境光, GI, IBL, 实时渲染]
 categories: [图形学入门笔记]
@@ -45,6 +45,8 @@ categories: [图形学入门笔记]
         - 如果发现上一帧不可用，调整 $\alpha$ 的值，增大当前帧的权重
         - 新带来的问题：引入了更多当前帧的噪声
     - Temporally Reliable Motion Vectors for Real-time Ray Tracing, Eurographics 2021
+
+<!--More-->
 
 ## 2 空间上的滤波
 
@@ -114,18 +116,18 @@ categories: [图形学入门笔记]
 
 - 联合双边滤波
 - 深度
-    - <img src="Real-time%20Ray%20Tracing/image-20220406214022908.png" alt="image-20220406214022908" style="zoom:50%;" align="left"/>
-    - <img src="Real-time%20Ray%20Tracing/image-20220406213905637.png" alt="image-20220406213905637" style="zoom:50%;" align="left"/>
+    - <img src="Real-time%20Ray%20Tracing/image-20220406214022908.png" alt="image-20220406214022908" style="zoom:50%;" />
+    - <img src="Real-time%20Ray%20Tracing/image-20220406213905637.png" alt="image-20220406213905637" style="zoom:50%;" />
     - $\epsilon$：防止分母为 0
     - 用深度差除以梯度，从而让侧面上两个点对彼此的贡献增大
     - 可以理解为切平面上的深度差距
 - 法线
-    - <img src="Real-time%20Ray%20Tracing/image-20220406215030002.png" alt="image-20220406215030002" style="zoom:50%;" align="left"/>
-    - <img src="Real-time%20Ray%20Tracing/image-20220406214217900.png" alt="image-20220406214217900" style="zoom:50%;" align="left"/>
+    - <img src="Real-time%20Ray%20Tracing/image-20220406215030002.png" alt="image-20220406215030002" style="zoom:50%;" />
+    - <img src="Real-time%20Ray%20Tracing/image-20220406214217900.png" alt="image-20220406214217900" style="zoom:50%;" />
     - 不应用法线贴图
 - 颜色
-    - <img src="Real-time%20Ray%20Tracing/image-20220406214953646.png" alt="image-20220406214953646" style="zoom:50%;" align="left" />
-    - <img src="Real-time%20Ray%20Tracing/image-20220406214501832.png" alt="image-20220406214501832" style="zoom:50%;" align="left"/>
+    - <img src="Real-time%20Ray%20Tracing/image-20220406214953646.png" alt="image-20220406214953646" style="zoom:50%;"  />
+    - <img src="Real-time%20Ray%20Tracing/image-20220406214501832.png" alt="image-20220406214501832" style="zoom:50%;" />
     - 为了避免 B 点过亮导致与 A 点的颜色相近，在分母加上一个方差项
     - 如何求分母的方差
         - Spatial：在目标点周围 7 x 7 范围内求方差

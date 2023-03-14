@@ -5,6 +5,13 @@ tags: [NeRF, 实时渲染]
 categories: [NeRF原理与相关论文]
 ---
 
+## 汇总
+
+- [Plenoxels](#Plenoxels-Radiance-Fields-without-Neural-Networks)
+- [DVGO](#Direct-Voxel-Grid-Optimization-Super-fast-Convergence-for-Radiance-Fields-Reconstruction)
+- [NeX](#NeX-Real-time-View-Synthesis-with-Neural-Basis-Expansion)
+- [SNeRG](#Baking-Neural-Radiance-Fields-for-Real-Time-View-Synthesis)
+
 ## Plenoxels: Radiance Fields without Neural Networks
 
 ### Info
@@ -30,6 +37,8 @@ categories: [NeRF原理与相关论文]
 
 - 只对比了训练时间和图像质量，未给出测试时的帧率等数据
 - <img src="Faster%20Inference_20220324/image-20220323220836486.png" alt="image-20220323220836486" style="zoom:67%;"/>
+
+<!--More-->
 
 ## Direct Voxel Grid Optimization: Super-fast Convergence for Radiance Fields Reconstruction
 
@@ -86,17 +95,33 @@ categories: [NeRF原理与相关论文]
 - 核心工作在于解决 view-dependent，没有比较帧率
 - <img src="Faster%20Inference_20220324/image-20220323233052246.png" alt="image-20220323233052246" style="zoom: 67%;"/>
 
-## GAMES202
 
-- 实时环境光照
-    - prefiltering，split sum，**球谐函数，小波函数**
+## Baking Neural Radiance Fields for Real-Time View Synthesis
 
-- 实时全局光照
-    - 屏幕空间：ambient occlusion，screen space ray tracing，RSM
-    - 3D 空间：VPL，LPV，VXGI，RTXGI
-    - 预计算：precomputed radiance transfer，light baking
+### Info
 
-- 实时高质量着色
-    - BRDF
+- 会议：ICCV
+- 年份：2021
+- https://phog.github.io/snerg/
 
-- 实时光线追踪
+### Method
+
+- ![image-20220330153216564](Faster%20Inference_20220324/image-20220330153216564.png)
+- 采用预计算的思路
+- 使用两个神经网络，将 diffuse 和 specular 部分拆开
+    - 在每个采样点处使用一个大的神经网络
+        - 输入光线位置 + 方向，输出颜色、密度、用于 specular 的特征向量
+    - 对于 specular 部分，在 volume rendering 的累计结果上使用一个小的神经网络
+        - 输入累计的特征向量，输出 specular 的颜色值
+- 训练时，将大网络的输出结果存储在 voxel grid 中
+- 测试时，直接访问 voxel，不需要经过大的神经网络
+
+### Result
+
+- <img src="Faster%20Inference_20220324/image-20220330155142510.png" alt="image-20220330155142510" style="zoom:80%;" />
+- 达到实时，数量级与同期的 FastNeRF，PlenOctrees，KiloNeRF 相同，但是数据上稍微差一点
+    - 都是 2021 年的论文
+- 这几篇 paper 的思路基本是一样的，区别只在于实现细节 / 技术上的优化
+    - 用 voxel 划分场景 + 预计算
+    - 投影到基函数上
+    - 牺牲一定的质量，换来渲染速度

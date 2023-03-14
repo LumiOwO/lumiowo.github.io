@@ -28,21 +28,23 @@ categories: [图形学入门笔记]
     - 如果 BRDF 是 glossy 的，那么有效的积分域将会很小；
     - 如果 BRDF 是 diffuse 的，那么它的函数值变化是非常smooth的
 
-    ![img](Environment%20Lighting/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F671e457f-ea0f-47d3-8444-321cdc29a821%252FUntitled.png)
+    ![img](Environment%20Lighting/2F671e457f-ea0f-47d3-8444-321cdc29a821-2FUntitled.png)
 
 - 回顾重要近似
 
-    ![img](Environment%20Lighting/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252Fa383c1ec-fbfe-4f49-b3ad-ff99bc334557%252FUntitled.png)
+    ![img](Environment%20Lighting/2Fa383c1ec-fbfe-4f49-b3ad-ff99bc334557-2FUntitled.png)
 
 - 工业界把这种拆分方法叫做 Split Sum
 
-    ![img](Environment%20Lighting/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252Fd113e8e5-149a-44bd-afaa-df2d8a24b98d%252FUntitled.png)
+    ![img](Environment%20Lighting/2Fd113e8e5-149a-44bd-afaa-df2d8a24b98d-2FUntitled.png)
+
+<!--More-->
 
 ### 2.1 Lighting 项
 
 - 把渲染方程的 lighting 项拆出来
 
-    ![img](Environment%20Lighting/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F1700b876-6c1e-4354-8fcf-a5de7fbe1c87%252FUntitled.png)
+    ![img](Environment%20Lighting/2F1700b876-6c1e-4354-8fcf-a5de7fbe1c87-2FUntitled.png)
 
     - 相当于先对环境光贴图做滤波操作，再乘到最后的结果中
 
@@ -69,11 +71,11 @@ categories: [图形学入门笔记]
 - 降低参数空间的维度
 - 菲涅尔项可以拆成只用 $R_0$ 和 $\theta$ 表示的形式
 
-![img](Environment%20Lighting/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F606ad3f3-1deb-46ae-95cf-e992daa8e185%252FUntitled.png)
+![img](Environment%20Lighting/2F606ad3f3-1deb-46ae-95cf-e992daa8e185-2FUntitled.png)
 
 - 积分值可以预先计算出来，作为一张二维纹理
 
-    <img src="Environment%20Lighting/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252Ffff907cb-c210-4d7a-8124-6a686d99b2a8%252FUntitled.png" alt="img" style="zoom:80%;" align="left"/>
+    <img src="Environment%20Lighting/2Ffff907cb-c210-4d7a-8124-6a686d99b2a8-2FUntitled.png" alt="img" style="zoom:80%;"/>
 
 - 每一个 BRDF 对应了一张确定的表，与场景中的光线分布无关
 
@@ -114,7 +116,7 @@ categories: [图形学入门笔记]
 
 - 类比于1维的傅里叶级数
 
-    ![img](Environment%20Lighting/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252Fcd02de24-79ae-4da9-8944-c8116d137ec4%252FUntitled.png)
+    ![img](Environment%20Lighting/2Fcd02de24-79ae-4da9-8944-c8116d137ec4-2FUntitled.png)
 
 - 每一行的频率 l 都是一样的，l 越大，频率越高
 
@@ -162,7 +164,7 @@ categories: [图形学入门笔记]
 
 - 思路
 
-    ![img](Environment%20Lighting/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F3524e759-a7d1-4903-a9a9-873b27f30272%252FUntitled.png)
+    ![img](Environment%20Lighting/2F3524e759-a7d1-4903-a9a9-873b27f30272-2FUntitled.png)
 
     - 把 Lighting 项拆成基函数
     - 把除了 Lighting 项的部分称为 Light transport 项
@@ -196,19 +198,19 @@ categories: [图形学入门笔记]
 
     - 因此实际的环境光照结果相当于预计算结果的一个线性组合
 
-        ![img](Environment%20Lighting/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F2419bfd5-b987-483f-b669-8c378a0ab538%252FUntitled.png)
+        ![img](Environment%20Lighting/2F2419bfd5-b987-483f-b669-8c378a0ab538-2FUntitled.png)
 
 - 另一个理解
 
     - 直接把 light transport 也拆成基函数
 
-        ![img](Environment%20Lighting/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F0dbe2bc1-aeeb-4567-ad72-0533170b90f2%252FUntitled.png)
+        ![img](Environment%20Lighting/2F0dbe2bc1-aeeb-4567-ad72-0533170b90f2-2FUntitled.png)
 
     - 由于SH函数的正交性，不同的基函数结果为 0 ，因此仍然会得到与之前的理解相同的结果
 
 ### 6.3 Glossy
 
-<img src="Environment%20Lighting/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252Fc01bd75d-8a33-492f-99e4-ba6458f50fca%252FUntitled.png" alt="img" style="zoom: 67%;" />
+<img src="Environment%20Lighting/2Fc01bd75d-8a33-492f-99e4-ba6458f50fca-2FUntitled.png" alt="img" style="zoom: 67%;" />
 
 - Glossy结果与观察视角有关 → Light transport 投影到基函数之后，仍然是 o 的函数
 - 将投影后的系数再向 o 空间的基函数投影
@@ -244,7 +246,7 @@ categories: [图形学入门笔记]
 
 - 这里展示的是二维的 Haar 小波
 
-    <img src="Environment%20Lighting/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252Faaad4380-d3c5-4ba1-ab58-4649abadce1a%252FUntitled.png" alt="img" style="zoom: 50%;" align="left"/>
+    <img src="Environment%20Lighting/2Faaad4380-d3c5-4ba1-ab58-4649abadce1a-2FUntitled.png" alt="img" style="zoom: 50%;" />
 
 - 不同的小波函数的定义域不同
 

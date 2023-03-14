@@ -39,13 +39,15 @@ categories: [图形学入门笔记]
 - 可以画多次
     - 之前的帧可以作为参考
 
+<!--More-->
+
 ## 3 GLSL
 
 ### 3.1 shader language简介
 
-HLSL → vertex shader + pixel shader
+- HLSL → vertex shader + pixel shader
 
-GLSL → vertex shader + fragment shader
+- GLSL → vertex shader + fragment shader
 
 ### 3.2 配置shader
 
@@ -89,6 +91,6 @@ GLSL → vertex shader + fragment shader
 
 ## 4 渲染方程
 
-![img](Recap%20of%20CG%20basics/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F56298d70-cd6c-4046-b024-1ee97028e215%252FUntitled.png)
+![img](Recap%20of%20CG%20basics/56298d70-cd6c-4046-b024-1ee97028e215Untitled.png)
 
 - 实时渲染的间接光照通常只考虑one-bounce

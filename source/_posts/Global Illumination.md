@@ -38,15 +38,17 @@ categories: [图形学入门笔记]
 
     - shading point可能从各个方向看向次级光源，通过该假设可以简化计算
 
+<!--More-->
+
 - 如果在 shading point 处采样，会有很多 sample 到不了 patch 处，从而被浪费
 
-    <img src="Global%20Illumination/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252Ffa099d1f-8837-4f3e-a938-d5d40c3fe788%252FUntitled.png" alt="img" style="zoom:50%;" align="left"/>
+    <img src="Global%20Illumination/2Ffa099d1f-8837-4f3e-a938-d5d40c3fe788-2FUntitled.png" alt="img" style="zoom:50%;" />
 
 - 转换成在 patch 处计算
 
 - 转换办法：把对立体角的积分转换为对面积的积分
 
-    ![img](Global%20Illumination/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F8f667e09-a2d2-4862-9b70-16b127a365c6%252FUntitled.png)
+    ![img](Global%20Illumination/2F8f667e09-a2d2-4862-9b70-16b127a365c6-2FUntitled.png)
 
 - 对于次级光源（点 q 处）
 
@@ -59,7 +61,7 @@ categories: [图形学入门笔记]
 
 - 把上面的代换式代入积分中：
 
-    ![img](Global%20Illumination/https%253A%252F%252Fs3-us-west-2.amazonaws.com%252Fsecure.notion-static.com%252F76bd1deb-6d82-4dbb-ab8f-b498e9f0662c%252FUntitled.png)
+    ![img](Global%20Illumination/2F76bd1deb-6d82-4dbb-ab8f-b498e9f0662c-2FUntitled.png)
 
 - 存在的问题
 
@@ -114,7 +116,7 @@ categories: [图形学入门笔记]
     - 每一帧都要重复以上步骤
 - 存在的问题
     - Light leaking
-        - <img src="Global%20Illumination/image-20220329162741984.png" alt="image-20220329162741984" style="zoom: 50%;" align="left"/>
+        - <img src="Global%20Illumination/image-20220329162741984.png" alt="image-20220329162741984" style="zoom: 50%;" />
         - 上图中，正确的情况下，点 p 反射的光无法照亮背面
         - 然而每个网格发出的光被认为是 uniform 的，因此背面会被照亮
 
