@@ -1,6 +1,6 @@
 ---
 title: Win11 若干疑难杂症的解决方法
-tags: []
+tags: [Windows, 疑难杂症]
 categories: []
 hide: false
 top: false
