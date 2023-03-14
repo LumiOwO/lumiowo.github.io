@@ -179,24 +179,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="进展"><a href="#进展" class="headerlink" title="进展"></a>进展</h2><ul>
-<li>学习理解了 monte carlo volume rendering 相关内容</li>
-<li>实现了 pytorch 版本，验证正确</li>
-<li>后续工作<ul>
-<li>解决该方法带来的一些新问题</li>
-<li>实现时序降噪</li>
-<li>进一步优化速度</li>
-</ul>
-</li>
-</ul>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
-<li><p>参考 delta tracking 的原理</p>
-</li>
-<li><p>Transmittance 计算，<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/519969318">https://zhuanlan.zhihu.com/p/519969318</a></p>
-</li>
+        <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li>Transmittance 计算，<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/519969318">https://zhuanlan.zhihu.com/p/519969318</a></li>
 <li>delta tracking，<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/166116224">https://zhuanlan.zhihu.com/p/166116224</a></li>
-<li>*<strong>volume rendering siggraph18 课程，<a target="_blank" rel="noopener" href="https://cs.dartmouth.edu/wjarosz/publications/novak18monte-sig.html">https://cs.dartmouth.edu/wjarosz/publications/novak18monte-sig.html</a></strong></li>
-<li>*<strong>volume rendering survey, <a target="_blank" rel="noopener" href="https://cs.dartmouth.edu/wjarosz/publications/novak18monte.pdf">https://cs.dartmouth.edu/wjarosz/publications/novak18monte.pdf</a></strong></li>
+<li><strong>volume rendering siggraph18 课程，<a target="_blank" rel="noopener" href="https://cs.dartmouth.edu/wjarosz/publications/novak18monte-sig.html">https://cs.dartmouth.edu/wjarosz/publications/novak18monte-sig.html</a></strong></li>
+<li><strong>volume rendering survey, <a target="_blank" rel="noopener" href="https://cs.dartmouth.edu/wjarosz/publications/novak18monte.pdf">https://cs.dartmouth.edu/wjarosz/publications/novak18monte.pdf</a></strong></li>
 </ul>
 <h3 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h3><ul>
 <li>nerf 的积分公式<ul>
@@ -204,8 +191,8 @@
 </ul>
 </li>
 <li><strong>目标：获得一个数值解，使得该数值解的期望值等于积分的值</strong><ul>
-<li>nerf：采样 1 条光线，这条光线上取 1024个 采样点</li>
-<li>ours：采样 n 条光线，每条光线上取 少量 采样点，最终结果为 n 条光线结果的均值<ul>
+<li>nerf ray marching：采样 1 条光线，这条光线上取 1024个 采样点</li>
+<li>monte-carlo：采样 n 条光线，每条光线上取 少量 采样点，最终结果为 n 条光线结果的均值<ul>
 <li>每条光线相互独立，因此可以每一帧只采样 1 条光线，再根据相邻帧的结果进行降噪（即时序降噪）</li>
 </ul>
 </li>
@@ -218,240 +205,18 @@
 <li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902151406809.png" alt="image-20220902151406809" style="zoom:67%;"></li>
 </ul>
 </li>
-<li>利用 $\int<em>a^bf(x) \,\mathrm{d}x \to \frac{1}{N}\sum</em>{i=1}^N \frac{f(x_i)}{p(x_i)}\$  写成蒙特卡洛形式<ul>
+<li>利用下式写成蒙特卡洛形式<script type="math/tex; mode=display">
+\int_a^bf(x) \,\mathrm{d}x \to \frac{1}{N}\sum_{i=1}^N \frac{f(x_i)}{p(x_i)}</script><ul>
 <li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902152830548.png" alt="image-20220902152830548" style="zoom:67%;"></li>
 </ul>
 </li>
 </ul>
-<h3 id="distance-sampling"><a href="#distance-sampling" class="headerlink" title="distance sampling"></a>distance sampling</h3><ul>
-<li><strong>目标：利用概率密度函数，把 $T$ 消掉</strong></li>
-<li>由于 <img src="/2022/11/03/Faster%20Inference_20220903/image-20220902153148833.png" alt="image-20220902153148833" style="zoom:67%;">, $T \in [0, 1]$，在 $[0, +\infty)$ 上单调递减</li>
-<li>取 $F(t) = 1 - T(t)$ 作为累积密度函数 (CDF)<ul>
-<li>此时 $p(t)$ 正好为 $\mu \cdot T$</li>
-</ul>
-</li>
-<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902153058630.png" alt="image-20220902153058630" style="zoom:67%;"></li>
-<li>采样时，先取一个 $[0, 1]$ 之间的随机数 $\xi$，令 $F(t) = \xi$，解出 $t$ 的值作为采样点的位置</li>
-<li>如果 $\mu_t$ 是常数，可以直接得到 $F^{-1}$ 的解析式</li>
-<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902154438934.png" alt="image-20220902154438934" style="zoom:67%;"></li>
-</ul>
-<h3 id="null-collision"><a href="#null-collision" class="headerlink" title="null collision"></a>null collision</h3><ul>
-<li><strong>目标：想办法把空间填充成均匀的</strong></li>
-<li>向空间中填入虚拟粒子（粉色），与真实粒子（灰色）构成一个均匀的空间</li>
-<li><p>虚拟粒子不影响光线原本的传播</p>
-<ul>
-<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902155146793.png" alt="image-20220902155146793" style="zoom:67%;"></li>
-</ul>
-</li>
-<li><p>例子：采样一条光线</p>
-<ul>
-<li>每次前进 $-\frac{\ln (1-\xi)}{\bar\mu}\$</li>
-<li>如果采样到虚拟粒子，认为是一个 null collision，继续向前取采样点</li>
-<li>如果采样到真实粒子，认为光线被该粒子挡住，停止向前</li>
-<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902160119667.png" alt="image-20220902160119667" style="zoom:67%;"></li>
-</ul>
-</li>
-<li><p>积分公式</p>
-<ul>
-<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902160713366.png" alt="image-20220902160713366" style="zoom:67%;"></li>
-</ul>
-</li>
-<li><p>蒙特卡洛形式</p>
-<ul>
-<li><p><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902160739942.png" alt="image-20220902160739942" style="zoom:67%;"></p>
-</li>
-<li><p><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902160953396.png" alt="image-20220902160953396" style="zoom:67%;"></p>
-</li>
-</ul>
-</li>
-<li><p>$L<em>*$ 用俄罗斯轮盘赌的方法估计，即 $\langle L</em><em>(y, \omega) \rangle = \left{ \begin{matrix} \frac{L_</em>(y)}{P<em>*(y)}&amp;, \xi &lt; P</em>*(y)\0&amp;,\mathrm{otherwise}\end{matrix} \right. \$</p>
-</li>
-<li><p>因此 $\langle L(x, \omega) \rangle = \sum<em>C^{ \;} w</em><em>(x)L_</em>(y, \omega)\$<br>其中 $w<em>*(x) = \frac{T</em>{\bar\mu}(x, y)}{p<em>{\bar\mu}}\frac{\mu</em><em>(x)}{P_</em>(x)}\$</p>
-</li>
-<li><p>由于 $p<em>{\bar\mu} = \bar\mu \cdot T</em>{\bar\mu}(x, y)\$，故 $w<em>*(x) = \frac{1}{\bar\mu}\frac{\mu</em><em>(x)}{P_</em>(x)} = 1\$</p>
-</li>
-</ul>
-<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><ul>
-<li><p>结果符合预期</p>
-<ul>
-<li>透明度的问题在后面讨论</li>
-</ul>
-<p>|                            1 spp                             |                            16 spp                            |                           1024 spp                           |<br>| :—————————————————————————————: | :—————————————————————————————: | :—————————————————————————————: |<br>| <img src="/2022/11/03/Faster%20Inference_20220903/image-20220902163521228.png" alt="image-20220902163521228"> | <img src="/2022/11/03/Faster%20Inference_20220903/image-20220902163638842.png" alt="image-20220902163638842"> | <img src="/2022/11/03/Faster%20Inference_20220903/ngp_ep0300_0000_rgb.png" alt="ngp_ep0300_0000_rgb"> |</p>
-</li>
-<li><p>采样问题终于解决，可以实现后续的时序降噪</p>
-</li>
-</ul>
-<h2 id="一些问题"><a href="#一些问题" class="headerlink" title="一些问题"></a>一些问题</h2><h3 id="mu-t-的范围"><a href="#mu-t-的范围" class="headerlink" title="$\mu_t$ 的范围"></a>$\mu_t$ 的范围</h3><ul>
-<li><p>目前结果的透明度不正确</p>
-</li>
-<li><p>原因：目前 $\bar\mu = 10$ ，取值小于 $\mu_t$</p>
-<ul>
-<li>此时 $P_t = \mu_t / \bar\mu &gt; 1$，必定会取到真实粒子</li>
-<li>相当于把 $\mu_t$ 的最大值裁剪到了 $\bar\mu$</li>
-<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902164241172.png" alt="image-20220902164241172"></li>
-</ul>
-</li>
-<li><p>验证：$\bar\mu$ 值越高，越接近真实值</p>
-<ul>
-<li>spp = 1024</li>
-</ul>
-<p>|                        $\bar\mu = 2$                         |                        $\bar\mu = 10$                        |                        $\bar\mu = 20$                        |                ground truth                 |<br>| :—————————————————————————————: | :—————————————————————————————: | :—————————————————————————————: | :————————————————————-: |<br>| <img src="/2022/11/03/Faster%20Inference_20220903/ngp_ep0300_0000_rgb-16621090516547.png" alt="ngp_ep0300_0000_rgb"> | <img src="/2022/11/03/Faster%20Inference_20220903/ngp_ep0300_0000_rgb-16621088581862.png" alt="ngp_ep0300_0000_rgb"> | <img src="/2022/11/03/Faster%20Inference_20220903/ngp_ep0300_0000_rgb-16621089759004.png" alt="ngp_ep0300_0000_rgb"> | <img src="/2022/11/03/Faster%20Inference_20220903/r_0.png" alt="r_0"> |</p>
-</li>
-<li><p>$\bar\mu$ 取的太大会出现新的问题（见后文）</p>
-</li>
-<li><p>$\mu_t$ 的最大值太大了</p>
-<ul>
-<li>最大值能达到 200000 左右</li>
-<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902170029346.png" alt="image-20220902170029346" style="zoom: 67%;"></li>
-</ul>
-</li>
-</ul>
-<h3 id="bar-mu-的选取"><a href="#bar-mu-的选取" class="headerlink" title="$\bar\mu$ 的选取"></a>$\bar\mu$ 的选取</h3><ul>
-<li><p>$\bar\mu$ 越大，每条光线的采样点数量越多</p>
-<ul>
-<li>步长为 $-\frac{\ln (1-\xi)}{\bar\mu}\$，$\bar\mu$ 越大步长越小</li>
-<li>$\bar\mu$ 越大，越容易采样到虚拟粒子，需要继续往前步进</li>
-<li><img src="/2022/11/03/Faster%20Inference_20220903/image-20220902170601183.png" alt="image-20220902170601183" style="zoom:67%;"></li>
-</ul>
-</li>
-<li><p>验证：$\bar\mu$ 值越高，运行时间越长</p>
-<ul>
-<li>spp = 1024</li>
-</ul>
-</li>
-</ul>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center"></th>
-<th style="text-align:center">$\bar\mu = 2$</th>
-<th style="text-align:center">$\bar\mu = 10$</th>
-<th style="text-align:center">$\bar\mu = 20$</th>
-<th style="text-align:center">$\bar\mu = 2000$</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">运行时间</td>
-<td style="text-align:center">10.58 s</td>
-<td style="text-align:center">35.79 s</td>
-<td style="text-align:center">64.10 s</td>
-<td style="text-align:center">&gt; 60 min</td>
-</tr>
-<tr>
-<td style="text-align:center">采样点个数的最大值</td>
-<td style="text-align:center">26</td>
-<td style="text-align:center">54</td>
-<td style="text-align:center">81</td>
-<td style="text-align:center">-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><h4 id="思路一"><a href="#思路一" class="headerlink" title="思路一"></a>思路一</h4><ul>
-<li>重新训练网络，限制 $\sigma$（即 $\mu_t$）的输出范围<ul>
-<li>如果能限制 $\sigma$ 在 $[0, 1]$ 范围内，可以很大提升采样效率</li>
-</ul>
-</li>
-<li>当前 density 网络使用的激活函数是指数函数 (exp)</li>
-<li>手动试了一些激活函数<ul>
-<li>学习率 lr = 0.01，epoch = 50</li>
-<li>发现在 $\sigma$ 值很大的时候结果才比较好</li>
-</ul>
-</li>
-</ul>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">$\sigma$ 激活函数</th>
-<th style="text-align:center">$\sigma$ 范围</th>
-<th style="text-align:center">$c$ 激活函数</th>
-<th style="text-align:center">验证集 psnr</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">exp</td>
-<td style="text-align:center">[0, 200000]</td>
-<td style="text-align:center">sigmoid</td>
-<td style="text-align:center">32.294314 (baseline)</td>
-</tr>
-<tr>
-<td style="text-align:center">relu</td>
-<td style="text-align:center">[0, 1000]</td>
-<td style="text-align:center">sigmoid</td>
-<td style="text-align:center">31.334019</td>
-</tr>
-<tr>
-<td style="text-align:center">sigmoid</td>
-<td style="text-align:center">[0, 1]</td>
-<td style="text-align:center">sigmoid</td>
-<td style="text-align:center">9.352023</td>
-</tr>
-<tr>
-<td style="text-align:center">sigmoid</td>
-<td style="text-align:center">[0, 1]</td>
-<td style="text-align:center">relu</td>
-<td style="text-align:center">9.371691</td>
-</tr>
-<tr>
-<td style="text-align:center">sigmoid * 1000</td>
-<td style="text-align:center">[0, 1000]</td>
-<td style="text-align:center">relu</td>
-<td style="text-align:center">30.554971</td>
-</tr>
-<tr>
-<td style="text-align:center">tanh + relu</td>
-<td style="text-align:center">[0, 1]</td>
-<td style="text-align:center">relu</td>
-<td style="text-align:center">15.853888</td>
-</tr>
-</tbody>
-</table>
-</div>
-<ul>
-<li>后面去搜索一下参数，看看能不能找到一个比较好的组合</li>
-</ul>
-<h4 id="思路二"><a href="#思路二" class="headerlink" title="思路二"></a>思路二</h4><ul>
-<li><p>$\sigma$ 值限制在 $[0, 1]$ 之间，允许颜色值大于 1</p>
-<ul>
-<li>此时的颜色不再理解为像素的 rgb 颜色值，而是理解为辐射度 $L$，因此可以大于 1</li>
-</ul>
-</li>
-<li><p>改用 NeRF-SH 网络</p>
-<ul>
-<li>将输出的 rgb 颜色值改为球谐函数的系数</li>
-<li>系数的取值范围不再限制在 $[0, 1]$ 内</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>以上思路打算后续都试一下</li>
-</ul>
-<h2 id="Todos"><a href="#Todos" class="headerlink" title="Todos"></a>Todos</h2><ul>
-<li><p>[x] 学习 delta tracking 原理</p>
-</li>
-<li><p>[x] 实现 pytorch 版本</p>
-</li>
-<li><p>[ ] 解决 $\bar\mu$ 的问题</p>
-<ul>
-<li>[ ] 尝试上面提到的思路</li>
-<li>[ ] 继续看论文，找找有没有可参考的其他解决方法</li>
-</ul>
-</li>
-<li><p>[ ] 实现时序降噪</p>
-</li>
-<li><p>[ ] 后续优化</p>
-<ul>
-<li>[ ] empty skipping</li>
-<li>[ ] early stop</li>
-<li>[ ] 实现 cuda 版本</li>
-</ul>
-</li>
-</ul>
-
+        
+          <!-- <a class="article-more-a" href="/2022/11/03/Faster%20Inference_20220903/#more">文章详情 >></a> -->
+          <span class="article-more-left-link">
+          <a class="article-more-a" href="/2022/11/03/Faster%20Inference_20220903/">文章详情 >></a>
+          </span>
+        
       
 
       
