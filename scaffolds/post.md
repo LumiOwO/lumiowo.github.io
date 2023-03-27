@@ -2,7 +2,7 @@
 title: {{ title }}
 date: {{ date }}
 tags: []
-categories: []
+categories: [未归档]
 hide: false
 top: false
 ---

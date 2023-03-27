@@ -1,7 +1,7 @@
 ---
 title: Win11 若干疑难杂症的解决方法
 tags: [Windows, 疑难杂症]
-categories: []
+categories: [未归档]
 hide: false
 top: false
 date: 2022-10-18 21:41:48
