@@ -156,6 +156,109 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-C-11-STL中的有序结构" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/12/11/C-11-STL%E4%B8%AD%E7%9A%84%E6%9C%89%E5%BA%8F%E7%BB%93%E6%9E%84/">C++11 - STL中的有序结构</a>
+    </h1>
+  
+
+        
+        
+        
+        <a href="/2021/12/11/C-11-STL%E4%B8%AD%E7%9A%84%E6%9C%89%E5%BA%8F%E7%BB%93%E6%9E%84/" class="archive-article-date">
+  	<time datetime="2021-12-11T14:56:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-11</time>
+</a>
+        
+      </header>
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近做课程的大作业时频繁用到 C++ STL 的有序容器，在此记录一下各种结构的用法与摸索出来的小技巧。</p>
+<h2 id="1-std-vector-的排序和搜索"><a href="#1-std-vector-的排序和搜索" class="headerlink" title="1 std::vector 的排序和搜索"></a>1 <code>std::vector</code> 的排序和搜索</h2><p><code>std::vector</code> 是比较常用的 STL 容器。假设我们现在有这样一个 <code>arr</code>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> arr = std::vector&lt;<span class="type">int</span>&gt;&#123;<span class="number">4</span>, <span class="number">-3</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">2</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>我们可以使用 <code>std::sort()</code> 函数对该数组进行排序，使用该函数需要引用头文件 <code>&lt;algorithm&gt;</code>。我们只需将 <code>arr</code> 开始和结束位置的 iterator 传递给 <code>std::sort()</code> 函数，即可对其进行排序。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::<span class="built_in">sort</span>(arr.<span class="built_in">begin</span>(), arr.<span class="built_in">end</span>());</span><br><span class="line"><span class="comment">// result: -3 1 2 4 5</span></span><br></pre></td></tr></table></figure>
+<p>我们还可以通过 lambda 表达式定义不同的排序方式，只需要将用于比较的 lambda 表达式当成第三个参数传递给 <code>std::sort()</code> 函数即可。默认情况下，该比较函数为 <code>operator&lt;</code> 函数，将 <code>arr</code> 从小到大进行排序。</p>
+<p>如果我们想将 <code>arr</code> 按照从大到小的顺序排序，则将比较函数改为大于即可。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">sort</span>(arr.<span class="built_in">begin</span>(), arr.<span class="built_in">end</span>(),</span><br><span class="line">          [](<span class="type">const</span> <span class="type">int</span>&amp; a, <span class="type">const</span> <span class="type">int</span>&amp; b) &#123; <span class="keyword">return</span> a &gt; b; &#125;);</span><br><span class="line"><span class="comment">// result: 5 4 2 1 -3</span></span><br></pre></td></tr></table></figure>
+<p>又例如，我们想将 <code>arr</code> 按照平方的值从小到大进行排序：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">sort</span>(arr.<span class="built_in">begin</span>(), arr.<span class="built_in">end</span>(),</span><br><span class="line">          [](<span class="type">const</span> <span class="type">int</span>&amp; a, <span class="type">const</span> <span class="type">int</span>&amp; b) &#123; <span class="keyword">return</span> a * a &lt; b * b; &#125;);</span><br><span class="line"><span class="comment">// result: 1 2 -3 4 5</span></span><br></pre></td></tr></table></figure>
+<p>另外，很多时候我们需要在 <code>arr</code> 中搜索满足条件的值。C++ 提供了 <code>std::find_if()</code> 函数，通过 lambda 表达式给定查找规则，返回一个 iterator。若查找成功，该 iterator 指向的是第一个符合查找规则的元素；否则，该 iterator 指向的是 <code>arr</code> 的末尾。</p>
+<p>例如，我们想要找到 <code>arr</code> 中第一个小于 0 的数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> it = std::<span class="built_in">find_if</span>(arr.<span class="built_in">begin</span>(), arr.<span class="built_in">end</span>(),</span><br><span class="line">                       [](<span class="type">const</span> <span class="type">int</span>&amp; val) &#123; <span class="keyword">return</span> val &lt; <span class="number">0</span>; &#125;);</span><br><span class="line">std::cout &lt;&lt; *it; <span class="comment">// result: -3</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-有序结构"><a href="#2-有序结构" class="headerlink" title="2 有序结构"></a>2 有序结构</h2><h3 id="2-1-堆-——-std-priority-queue"><a href="#2-1-堆-——-std-priority-queue" class="headerlink" title="2.1 堆 —— std::priority_queue"></a>2.1 堆 —— <code>std::priority_queue</code></h3><p>为了方便说明，我们先对 <code>int</code> 类型进行操作。有关自定义结构体的内容详见<a href="/2021/12/11/C-11-STL%E4%B8%AD%E7%9A%84%E6%9C%89%E5%BA%8F%E7%BB%93%E6%9E%84/#3-对自定义结构进行排序">第3节</a>。</p>
+<p>我们可以使用 STL 提供的 <code>std::priority_queue</code> 结构来表示一个堆。如果我们想要有一个最大堆 <code>maxHeap</code>，可以用下面的方式定义：</p>
+        
+          <!-- <a class="article-more-a" href="/2021/12/11/C-11-STL%E4%B8%AD%E7%9A%84%E6%9C%89%E5%BA%8F%E7%BB%93%E6%9E%84/#more">文章详情 >></a> -->
+          <span class="article-more-left-link">
+          <a class="article-more-a" href="/2021/12/11/C-11-STL%E4%B8%AD%E7%9A%84%E6%9C%89%E5%BA%8F%E7%BB%93%E6%9E%84/">文章详情 >></a>
+          </span>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">C++</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/编程语言学习//" class="article-tag-list-link color2">编程语言学习</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        <!--  -->
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-图算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1270,109 +1373,6 @@
 			 
         		<li class="article-tag-list-item">
         			<a href="/categories/数据结构和算法//" class="article-tag-list-link color3">数据结构和算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        <!--  -->
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-C-11-类型别名和类型推断：typedef、using、auto、decltype" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/19/C-11-%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D%E5%92%8C%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD%EF%BC%9Atypedef%E3%80%81using%E3%80%81auto%E3%80%81decltype/">C++11 - 类型别名和类型推断：typedef、using、auto、decltype</a>
-    </h1>
-  
-
-        
-        
-        
-        <a href="/2021/01/19/C-11-%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D%E5%92%8C%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD%EF%BC%9Atypedef%E3%80%81using%E3%80%81auto%E3%80%81decltype/" class="archive-article-date">
-  	<time datetime="2021-01-19T08:58:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-19</time>
-</a>
-        
-      </header>
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近在读第5版的《C++ Primer》，发现C++11标准中有很多非常实用的新特性。这里简单总结下C++11标准中处理变量类型的一些特性。</p>
-<h2 id="1-类型别名"><a href="#1-类型别名" class="headerlink" title="1 类型别名"></a>1 类型别名</h2><h3 id="1-1-typedef"><a href="#1-1-typedef" class="headerlink" title="1.1 typedef"></a>1.1 <code>typedef</code></h3><p><code>typedef</code>关键字在C++11之前就可以使用，作用是定义一个类型的别名，换句话说，它是某种类型的同义词。例如：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">double</span> wages;  <span class="comment">// wages是double的同义词</span></span><br></pre></td></tr></table></figure>
-<p>这样<code>wages</code>就成为了<code>double</code>的一个别名。只要是类型名能出现的地方，就能够使用类型的别名：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">double</span> a = <span class="number">1.2</span>;</span><br><span class="line">wages b = <span class="number">2.3</span>;</span><br></pre></td></tr></table></figure>
-<p><code>typedef</code>在给指针起别名的时候会遇到一些容易混淆的地方。</p>
-<h4 id="1-1-1-与宏定义的区别"><a href="#1-1-1-与宏定义的区别" class="headerlink" title="1.1.1 与宏定义的区别"></a>1.1.1 与宏定义的区别</h4><p>下面的代码将<code>pstring</code>作为<code>char*</code>类型的别名，并定义一个常指针变量<code>cstr</code>：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">char</span> *pstring;</span><br><span class="line"><span class="type">const</span> pstring cstr = <span class="literal">nullptr</span>;</span><br></pre></td></tr></table></figure>
-<p>因此变量<code>cstr</code>的数据类型为<code>const pstring</code>，意味着该指针是常量，不能修改指针所指的位置，但是可以通过该指针修改指针指向的字符内容。</p>
-<p>类似地，如果使用宏定义来声明<code>pstring</code>，即：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> pstring char*</span></span><br><span class="line"><span class="type">const</span> pstring cstr = <span class="literal">nullptr</span>;</span><br></pre></td></tr></table></figure>
-<p>由于在编译预处理过程中，代码中的<code>pstring</code>文本会被替换为<code>char*</code>，因此这段代码等价于：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">char</span>* cstr = <span class="literal">nullptr</span>;</span><br></pre></td></tr></table></figure>
-<p>也就是说，这样定义出来的变量<code>cstr</code>为指向<code>const char</code>数据类型的指针，即指针所指的位置可以修改，但是不可以通过该指针修改指向的字符内容。</p>
-<h4 id="1-1-2-函数指针的别名"><a href="#1-1-2-函数指针的别名" class="headerlink" title="1.1.2 函数指针的别名"></a>1.1.2 函数指针的别名</h4><p><code>typedef</code>最容易用错的时候是在给复杂的数据类型命名时，比如函数指针。例如我们要为下面这个函数的函数指针起一个别名<code>pfunc</code>：</p>
-        
-          <!-- <a class="article-more-a" href="/2021/01/19/C-11-%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D%E5%92%8C%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD%EF%BC%9Atypedef%E3%80%81using%E3%80%81auto%E3%80%81decltype/#more">文章详情 >></a> -->
-          <span class="article-more-left-link">
-          <a class="article-more-a" href="/2021/01/19/C-11-%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D%E5%92%8C%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD%EF%BC%9Atypedef%E3%80%81using%E3%80%81auto%E3%80%81decltype/">文章详情 >></a>
-          </span>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">C++</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/编程语言学习//" class="article-tag-list-link color2">编程语言学习</a>
         		</li>
       		
 		</ul>
@@ -9600,10 +9600,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">GoogleTest</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">GAMES202</a>
               </li>
              
@@ -9621,6 +9617,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">实时渲染</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">GoogleTest</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -9652,11 +9652,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态规划</a>
+                <a href="javascript:void(0)" class="js-tag color2">图</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">图</a>
+                <a href="javascript:void(0)" class="js-tag color5">动态规划</a>
               </li>
              
               <li class="article-tag-list-item">
