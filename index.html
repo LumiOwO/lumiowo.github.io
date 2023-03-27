@@ -181,24 +181,18 @@
       
         <p>最近在跑 NeRF 的实验，使用了 WandB 记录实验数据以及可视化模型训练过程。但我不太想把数据上传到 WandB 官方的服务器，于是决定在自己的服务器上搭建一个 WandB 服务，在此记录一下。</p>
 <h2 id="1-安装docker"><a href="#1-安装docker" class="headerlink" title="1 安装docker"></a>1 安装docker</h2><p>我的服务器操作系统是 Ubuntu 22.04 LTS.</p>
-<p>首先添加使用 HTTPS 传输的软件包以及 CA 证书。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release</span><br></pre></td></tr></table></figure></p>
-<p>再添加软件源的 GPG 密钥，这里使用的国内源。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg</span><br></pre></td></tr></table></figure><br>然后向 <code>sources.list</code> 中添加 Docker 软件源。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null</span><br></pre></td></tr></table></figure>
+<p>首先添加使用 HTTPS 传输的软件包以及 CA 证书。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release</span><br></pre></td></tr></table></figure></p>
+<p>再添加软件源的 GPG 密钥，这里使用的国内源。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg</span><br></pre></td></tr></table></figure></p>
+<p>然后向 <code>sources.list</code> 中添加 Docker 软件源。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu <span class="subst">$(lsb_release -cs)</span> stable&quot;</span> | sudo <span class="built_in">tee</span> /etc/apt/sources.list.d/docker.list &gt; /dev/null</span><br></pre></td></tr></table></figure>
 <p>更新 apt 软件包缓存，并安装 <code>docker-ce</code>.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
 <p>之后便可以启动 docker.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable docker</span><br><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
-<p>然后需要把当前用户添加到 docker 用户组，否则测试 docker 时会提示 <code>docker: permission denied</code>.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo groupadd docker</span><br><span class="line">sudo usermod -aG docker $USER</span><br></pre></td></tr></table></figure>
-<p>之后需要更新一下用户组，否则上面的设置不生效！</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">newgrp docker</span><br></pre></td></tr></table></figure>
-<p>最后可以跑一个 hello-world，测试 docker 是否安装成功。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm hello-world</span><br></pre></td></tr></table></figure>
-<h2 id="2-启动-WandB-服务"><a href="#2-启动-WandB-服务" class="headerlink" title="2 启动 WandB 服务"></a>2 启动 WandB 服务</h2><p>新版本的 WandB 本地部署流程简化了很多，只要服务器上安装了 docker 和 python，就可以一键启动 WandB 服务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> docker</span><br><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
         
-          <!-- <a class="article-more-a" href="/2023/03/27/WandB-%E6%9C%AC%E5%9C%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/#more">文章详情 >></a> -->
+          <!-- <a class="article-more-a" href="/2023/03/27/WandB-%E6%9C%AC%E5%9C%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/#more">阅读全文 >></a> -->
           <span class="article-more-left-link">
-          <a class="article-more-a" href="/2023/03/27/WandB-%E6%9C%AC%E5%9C%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/">文章详情 >></a>
+          <a class="article-more-a" href="/2023/03/27/WandB-%E6%9C%AC%E5%9C%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/">阅读全文 >></a>
           </span>
         
       
@@ -208,6 +202,25 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">WandB</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">神经网络</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">docker</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
@@ -305,9 +318,9 @@
 </li>
 </ul>
         
-          <!-- <a class="article-more-a" href="/2022/11/03/Faster%20Inference_20220903/#more">文章详情 >></a> -->
+          <!-- <a class="article-more-a" href="/2022/11/03/Faster%20Inference_20220903/#more">阅读全文 >></a> -->
           <span class="article-more-left-link">
-          <a class="article-more-a" href="/2022/11/03/Faster%20Inference_20220903/">文章详情 >></a>
+          <a class="article-more-a" href="/2022/11/03/Faster%20Inference_20220903/">阅读全文 >></a>
           </span>
         
       
@@ -419,9 +432,9 @@
 <li>操作：新建一项，「操作」选择「启动程序」，「程序与脚本」填写脚本文件的路径，「添加参数（可选）」填写「reset」</li>
 </ul>
         
-          <!-- <a class="article-more-a" href="/2022/10/18/Win11%E8%8B%A5%E5%B9%B2%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/#more">文章详情 >></a> -->
+          <!-- <a class="article-more-a" href="/2022/10/18/Win11%E8%8B%A5%E5%B9%B2%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/#more">阅读全文 >></a> -->
           <span class="article-more-left-link">
-          <a class="article-more-a" href="/2022/10/18/Win11%E8%8B%A5%E5%B9%B2%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/">文章详情 >></a>
+          <a class="article-more-a" href="/2022/10/18/Win11%E8%8B%A5%E5%B9%B2%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/">阅读全文 >></a>
           </span>
         
       
@@ -578,9 +591,9 @@
 </li>
 </ul>
         
-          <!-- <a class="article-more-a" href="/2022/04/07/Real-time%20Ray%20Tracing/#more">文章详情 >></a> -->
+          <!-- <a class="article-more-a" href="/2022/04/07/Real-time%20Ray%20Tracing/#more">阅读全文 >></a> -->
           <span class="article-more-left-link">
-          <a class="article-more-a" href="/2022/04/07/Real-time%20Ray%20Tracing/">文章详情 >></a>
+          <a class="article-more-a" href="/2022/04/07/Real-time%20Ray%20Tracing/">阅读全文 >></a>
           </span>
         
       
@@ -726,9 +739,9 @@
 </li>
 </ul>
         
-          <!-- <a class="article-more-a" href="/2022/04/01/Global%20Illumination/#more">文章详情 >></a> -->
+          <!-- <a class="article-more-a" href="/2022/04/01/Global%20Illumination/#more">阅读全文 >></a> -->
           <span class="article-more-left-link">
-          <a class="article-more-a" href="/2022/04/01/Global%20Illumination/">文章详情 >></a>
+          <a class="article-more-a" href="/2022/04/01/Global%20Illumination/">阅读全文 >></a>
           </span>
         
       
@@ -859,9 +872,9 @@
 </li>
 </ul>
         
-          <!-- <a class="article-more-a" href="/2022/03/31/Environment%20Lighting/#more">文章详情 >></a> -->
+          <!-- <a class="article-more-a" href="/2022/03/31/Environment%20Lighting/#more">阅读全文 >></a> -->
           <span class="article-more-left-link">
-          <a class="article-more-a" href="/2022/03/31/Environment%20Lighting/">文章详情 >></a>
+          <a class="article-more-a" href="/2022/03/31/Environment%20Lighting/">阅读全文 >></a>
           </span>
         
       
@@ -993,9 +1006,9 @@
 <li><img src="/2022/03/24/Faster%20Inference_20220324/image-20220323220836486.png" alt="image-20220323220836486" style="zoom:67%;"></li>
 </ul>
         
-          <!-- <a class="article-more-a" href="/2022/03/24/Faster%20Inference_20220324/#more">文章详情 >></a> -->
+          <!-- <a class="article-more-a" href="/2022/03/24/Faster%20Inference_20220324/#more">阅读全文 >></a> -->
           <span class="article-more-left-link">
-          <a class="article-more-a" href="/2022/03/24/Faster%20Inference_20220324/">文章详情 >></a>
+          <a class="article-more-a" href="/2022/03/24/Faster%20Inference_20220324/">阅读全文 >></a>
           </span>
         
       
@@ -1145,9 +1158,9 @@
 </li>
 </ul>
         
-          <!-- <a class="article-more-a" href="/2022/03/23/Real-time%20shadows/#more">文章详情 >></a> -->
+          <!-- <a class="article-more-a" href="/2022/03/23/Real-time%20shadows/#more">阅读全文 >></a> -->
           <span class="article-more-left-link">
-          <a class="article-more-a" href="/2022/03/23/Real-time%20shadows/">文章详情 >></a>
+          <a class="article-more-a" href="/2022/03/23/Real-time%20shadows/">阅读全文 >></a>
           </span>
         
       
@@ -1290,9 +1303,9 @@
 </ul>
 <p><img src="/2022/03/17/Faster%20Inference_20220317/image-20220316163314696.png" alt="image-20220316163314696"></p>
         
-          <!-- <a class="article-more-a" href="/2022/03/17/Faster%20Inference_20220317/#more">文章详情 >></a> -->
+          <!-- <a class="article-more-a" href="/2022/03/17/Faster%20Inference_20220317/#more">阅读全文 >></a> -->
           <span class="article-more-left-link">
-          <a class="article-more-a" href="/2022/03/17/Faster%20Inference_20220317/">文章详情 >></a>
+          <a class="article-more-a" href="/2022/03/17/Faster%20Inference_20220317/">阅读全文 >></a>
           </span>
         
       
@@ -1442,9 +1455,9 @@
 </li>
 </ul>
         
-          <!-- <a class="article-more-a" href="/2022/03/12/Recap%20of%20CG%20basics/#more">文章详情 >></a> -->
+          <!-- <a class="article-more-a" href="/2022/03/12/Recap%20of%20CG%20basics/#more">阅读全文 >></a> -->
           <span class="article-more-left-link">
-          <a class="article-more-a" href="/2022/03/12/Recap%20of%20CG%20basics/">文章详情 >></a>
+          <a class="article-more-a" href="/2022/03/12/Recap%20of%20CG%20basics/">阅读全文 >></a>
           </span>
         
       
@@ -9703,6 +9716,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">GoogleTest</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">GAMES202</a>
               </li>
              
@@ -9723,10 +9740,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">GoogleTest</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">NeRF</a>
               </li>
              
@@ -9736,6 +9749,18 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">shadow</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">WandB</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">神经网络</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">docker</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -9755,11 +9780,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">图</a>
+                <a href="javascript:void(0)" class="js-tag color5">动态规划</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态规划</a>
+                <a href="javascript:void(0)" class="js-tag color2">图</a>
               </li>
              
               <li class="article-tag-list-item">

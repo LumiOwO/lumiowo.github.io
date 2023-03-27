@@ -7,39 +7,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <meta http-equiv="Access-Control-Allow-Origin" content="*">
   <link rel="dns-prefetch" href="https://lumiowo.github.io">
-  <title>GAMES202 - Real-time Ray Tracing | LumiOwO 的博客</title>
+  <title>Tag: 神经网络 | LumiOwO 的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1 时间上的滤波 关键思路 假设上一帧已滤波，并重复利用上一帧的信息 利用 motion vector SPP 的累积数量是指数递增的   back projection 找到当前帧 i 中的像素 x 在第 i - 1 中的像素位置 第一步：将屏幕空间的点变换到世界空间中 可以用 G-buffer 预先储存世界坐标 如果没有储存，做坐标变换即可：$s &#x3D; M^{-1}V^{-1}P^{-1}E^{">
-<meta property="og:type" content="article">
-<meta property="og:title" content="GAMES202 - Real-time Ray Tracing">
-<meta property="og:url" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="LumiOwO 的博客">
+<meta property="og:url" content="https://lumiowo.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/index.html">
 <meta property="og:site_name" content="LumiOwO 的博客">
-<meta property="og:description" content="1 时间上的滤波 关键思路 假设上一帧已滤波，并重复利用上一帧的信息 利用 motion vector SPP 的累积数量是指数递增的   back projection 找到当前帧 i 中的像素 x 在第 i - 1 中的像素位置 第一步：将屏幕空间的点变换到世界空间中 可以用 G-buffer 预先储存世界坐标 如果没有储存，做坐标变换即可：$s &#x3D; M^{-1}V^{-1}P^{-1}E^{">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406151526130.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406152814409.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406160914164.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406163341415.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406163806846.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406164646405.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406214022908.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406213905637.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406215030002.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406214217900.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406214953646.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406214501832.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406220221397.png">
-<meta property="og:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406220730183.png">
-<meta property="article:published_time" content="2022-04-06T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-03-14T06:27:31.033Z">
 <meta property="article:author" content="LumiOwO">
-<meta property="article:tag" content="GAMES202">
-<meta property="article:tag" content="环境光">
-<meta property="article:tag" content="GI">
-<meta property="article:tag" content="IBL">
-<meta property="article:tag" content="实时渲染">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/image-20220406151526130.png">
   
     <link rel="alternative" href="/atom.xml" title="LumiOwO 的博客" type="application/atom+xml">
   
@@ -178,472 +154,79 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Real-time Ray Tracing" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      GAMES202 - Real-time Ray Tracing
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2023" class="archive-year">2023</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2023/03/27/WandB-%E6%9C%AC%E5%9C%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/" class="archive-article-date">
+  	<time datetime="2023-03-27T02:52:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-03-27</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2023/03/27/WandB-%E6%9C%AC%E5%9C%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/">WandB 本地服务器部署</a>
     </h1>
   
 
-        
-        
-          <br/>
-          <!--显示阅读次数-->
-          <a class="cloud-tie-join-count" href="javascript:void(0);" style="color:gray;font-size:14px;">
-          <!-- <span class="icon-sort"></span> -->
-          <span id="busuanzi_container_page_pv" style="color: rgb(239, 117, 34); font-size: 1em; display: inline;">
-            <i class="fa fa-eye"></i>&nbsp
-            <span id="busuanzi_value_page_pv"></span> &nbsp;&nbsp;
-          </span>
-          </a>
-          <!--显示阅读次数完毕-->
-        
-        
-        <a href="/2022/04/07/Real-time%20Ray%20Tracing/" class="archive-article-date">
-  	<time datetime="2022-04-06T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-04-07</time>
-</a>
-        
-      </header>
-    
-    
-    <div class="toc-container tooltip-left">
-        <i class="icon-font icon-category"></i>
-        <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-            </span>
-            <span class="tooltip-content">
-                <div class="toc-article">
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%97%B6%E9%97%B4%E4%B8%8A%E7%9A%84%E6%BB%A4%E6%B3%A2"><span class="toc-number">1.</span> <span class="toc-text">1 时间上的滤波</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%A9%BA%E9%97%B4%E4%B8%8A%E7%9A%84%E6%BB%A4%E6%B3%A2"><span class="toc-number">2.</span> <span class="toc-text">2 空间上的滤波</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Spatiotemporal-Variance-Guided-Filtering-SVGF"><span class="toc-number">3.</span> <span class="toc-text">3 Spatiotemporal Variance-Guided Filtering (SVGF)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Recurrent-AutoEncoder-RAE"><span class="toc-number">4.</span> <span class="toc-text">4 Recurrent AutoEncoder (RAE)</span></a></li></ol>
-                </div>
-            </span>
-        </div>
-    </div>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-时间上的滤波"><a href="#1-时间上的滤波" class="headerlink" title="1 时间上的滤波"></a>1 时间上的滤波</h2><ul>
-<li>关键思路<ul>
-<li>假设上一帧已滤波，并重复利用上一帧的信息</li>
-<li>利用 motion vector</li>
-<li>SPP 的累积数量是指数递增的</li>
-</ul>
-</li>
-<li>back projection<ul>
-<li>找到当前帧 i 中的像素 x 在第 i - 1 中的像素位置</li>
-<li>第一步：将屏幕空间的点变换到世界空间中<ul>
-<li>可以用 G-buffer 预先储存世界坐标</li>
-<li>如果没有储存，做坐标变换即可：$s = M^{-1}V^{-1}P^{-1}E^{-1}x$</li>
-<li>假设上一帧到这一帧的变换为 $s’ \overset{T}{\rightarrow}s$，则 $s’=T^{-1}s$</li>
-<li>使用上一帧的坐标变换，投影到上一帧的屏幕空间：$x’=E’P’V’M’s’$</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>先对当前帧做 spatial 降噪，再与上一帧进行 alpha blend</p>
-<ul>
-<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406151526130.png" alt="image-20220406151526130" style="zoom: 50%;"></li>
-<li>$\alpha$ 一般取 0.1 - 0.2</li>
-</ul>
-</li>
-<li><p>存在的问题</p>
-<ul>
-<li>切换场景 / 场景的第一帧<ul>
-<li>场景、光照的突变</li>
-</ul>
-</li>
-<li>倒退着走的情况<ul>
-<li>从屏幕边缘新出现的点在上一帧没有出现</li>
-</ul>
-</li>
-<li>突然改变的遮挡关系 (disocclusion)<ul>
-<li>上一帧的某个被挡住的物体在这一帧出现了</li>
-<li>本质原因：G-buffer 只储存了屏幕空间的信息</li>
-<li>如果强行使用上一帧信息，会出现残影</li>
-<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406152814409.png" alt="image-20220406152814409" style="zoom:67%;"></li>
-</ul>
-</li>
-<li>shading 带来的问题<ul>
-<li>阴影</li>
-<li>glossy 材质</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>解决办法</p>
-<ul>
-<li>Clamping<ul>
-<li>先将上一帧的结果 clamp 到接近当前帧的结果，再进行混合</li>
-</ul>
-</li>
-<li>Detection<ul>
-<li>检测上一帧的像素是否可用<ul>
-<li>eg. 记录一个 object ID，检测上一帧对应的物体是否与当前帧相同</li>
-</ul>
-</li>
-<li>如果发现上一帧不可用，调整 $\alpha$ 的值，增大当前帧的权重</li>
-<li>新带来的问题：引入了更多当前帧的噪声</li>
-</ul>
-</li>
-<li>Temporally Reliable Motion Vectors for Real-time Ray Tracing, Eurographics 2021</li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-<h2 id="2-空间上的滤波"><a href="#2-空间上的滤波" class="headerlink" title="2 空间上的滤波"></a>2 空间上的滤波</h2><ul>
-<li><p>高斯滤波</p>
-<ul>
-<li>低通滤波，只保留低频信息</li>
-<li>滤波时，根据周围像素 j 到中心像素 i 的距离，由高斯函数确定权重</li>
-</ul>
-</li>
-<li><p>双边滤波</p>
-<ul>
-<li>在高斯滤波的基础上，保留边缘信息</li>
-<li>边缘 $\leftrightarrow$ 剧烈变化的颜色值</li>
-<li>添加一项基于颜色差值的高斯函数</li>
-<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406160914164.png" alt="image-20220406160914164"><ul>
-<li>第一项：基于距离的高斯函数</li>
-<li>第二项：基于颜色值的高斯函数</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>联合双边滤波</p>
-<ul>
-<li>用更多的 distance 来指导滤波</li>
-<li>利用 G-buffer 中的信息<ul>
-<li>G-buffer 中的信息是无噪声的</li>
-</ul>
-</li>
-<li>考虑深度、法线、颜色</li>
-</ul>
-</li>
-<li><p>如何实现大的滤波核</p>
-<ul>
-<li><p>Separate Pass</p>
-<ul>
-<li>二维滤波 $\rightarrow$ 先水平滤波一遍，再竖直滤波一遍</li>
-<li>$N^2 \rightarrow N + N$</li>
-<li>原理：二维高斯函数可以拆分成两个一维高斯函数的乘积<ul>
-<li>$G<em>{2D}(x, y) = G</em>{1D}(x) \cdot G_{1D}(y)$</li>
-<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406163341415.png" alt="image-20220406163341415"></li>
-<li>理论上，双边滤波是没办法拆开的</li>
-<li>实际上，为了效率仍然会拆开计算，且结果基本无区别</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>Progressively Growing Size</p>
-<ul>
-<li><p>过滤若干次，每次都滤波核大小不断增长</p>
-</li>
-<li><p>例子：a-trous wavelet 滤波器</p>
-<p>  <img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406163806846.png" alt="image-20220406163806846"></p>
-</li>
-<li><p>原理</p>
-<ul>
-<li>更大的 filter == 去除更低频的信息</li>
-<li>采样 == 搬移频谱</li>
-<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406164646405.png" alt="image-20220406164646405"></li>
-<li>存在的问题：很多滤波核并没有把高频信息全部扔掉</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>Outlier Removal</p>
-<ul>
-<li>对于图像中非常亮的点，滤波会出现问题<ul>
-<li>特别亮的点会被扩散到周围像素，产生 fireflies / blocky artifacts</li>
-</ul>
-</li>
-<li>特别亮的点称为 outlier</li>
-<li>outlier detection<ul>
-<li>寻找 7 x 7 范围内的像素</li>
-<li>计算均值和方差</li>
-<li>$[\mu-k\sigma, \mu+k\sigma]$ 范围外的点即为 outlier</li>
-</ul>
-</li>
-<li>outlier removal<ul>
-<li>把 outlier 的像素值 clamp 到 $[\mu-k\sigma, \mu+k\sigma]$ 范围内</li>
-</ul>
-</li>
-<li>用于时序的 clamping<ul>
-<li>如果上一帧的像素不可用，需要把上一帧的结果 clamp 到当前帧的范围内</li>
-<li>$\text{clamp}(C^{(i-1)},\mu-k\sigma, \mu+k\sigma)$</li>
-<li>是噪声和残影之间的一个 tradeoff</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="3-Spatiotemporal-Variance-Guided-Filtering-SVGF"><a href="#3-Spatiotemporal-Variance-Guided-Filtering-SVGF" class="headerlink" title="3 Spatiotemporal Variance-Guided Filtering (SVGF)"></a>3 Spatiotemporal Variance-Guided Filtering (SVGF)</h2><ul>
-<li>联合双边滤波</li>
-<li>深度<ul>
-<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406214022908.png" alt="image-20220406214022908" style="zoom:50%;"></li>
-<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406213905637.png" alt="image-20220406213905637" style="zoom:50%;"></li>
-<li>$\epsilon$：防止分母为 0</li>
-<li>用深度差除以梯度，从而让侧面上两个点对彼此的贡献增大</li>
-<li>可以理解为切平面上的深度差距</li>
-</ul>
-</li>
-<li>法线<ul>
-<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406215030002.png" alt="image-20220406215030002" style="zoom:50%;"></li>
-<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406214217900.png" alt="image-20220406214217900" style="zoom:50%;"></li>
-<li>不应用法线贴图</li>
-</ul>
-</li>
-<li>颜色<ul>
-<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406214953646.png" alt="image-20220406214953646" style="zoom:50%;"></li>
-<li><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406214501832.png" alt="image-20220406214501832" style="zoom:50%;"></li>
-<li>为了避免 B 点过亮导致与 A 点的颜色相近，在分母加上一个方差项</li>
-<li>如何求分母的方差<ul>
-<li>Spatial：在目标点周围 7 x 7 范围内求方差</li>
-<li>Temporal：在时域上对该方差做平均</li>
-<li>Spatial：对上述平均值，用一个 3 x 3 的核进行滤波</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="4-Recurrent-AutoEncoder-RAE"><a href="#4-Recurrent-AutoEncoder-RAE" class="headerlink" title="4 Recurrent AutoEncoder (RAE)"></a>4 Recurrent AutoEncoder (RAE)</h2><ul>
-<li><p>关键思路</p>
-<ul>
-<li>用神经网络降噪<ul>
-<li>输入：G-buffer、noisy image</li>
-<li>输出：clean image</li>
-</ul>
-</li>
-<li>神经网络自动累积 temporal 信息<ul>
-<li>recurrent convolution block</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>网络结构：U-Net</p>
-</li>
-<li><p><img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406220221397.png" alt="image-20220406220221397"></p>
-</li>
-<li><p>训练时需要使用连续帧</p>
-</li>
-<li><p>没有使用 motion-vector</p>
-</li>
-<li><p>缺点</p>
-<ul>
-<li>overblur、artifact 会比较多</li>
-</ul>
-</li>
-<li><p>对比</p>
-<p>  <img src="/2022/04/07/Real-time%20Ray%20Tracing/image-20220406220730183.png" alt="image-20220406220730183"></p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GAMES202</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">WandB</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">环境光</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">神经网络</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">GI</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">IBL</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">实时渲染</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">docker</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/图形学入门笔记//" class="article-tag-list-link color3">图形学入门笔记</a>
+        			<a href="/categories/未归档//" class="article-tag-list-link color4">未归档</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=https://lumiowo.github.io/2022/04/07/Real-time%20Ray%20Tracing/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2022/10/18/Win11%E8%8B%A5%E5%B9%B2%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Win11 若干疑难杂症的解决方法
-        
-      </div>
-    </a>
   
   
-    <a href="/2022/04/01/Global%20Illumination/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">GAMES202 - Global Illumination</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        <!-- 
-        <div class="toc-container tooltip-left">
-            <i class="icon-font icon-category"></i>
-            <div class="tooltip tooltip-east">
-                <span class="tooltip-item">
-                </span>
-                <span class="tooltip-content">
-                    <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%97%B6%E9%97%B4%E4%B8%8A%E7%9A%84%E6%BB%A4%E6%B3%A2"><span class="toc-number">1.</span> <span class="toc-text">1 时间上的滤波</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%A9%BA%E9%97%B4%E4%B8%8A%E7%9A%84%E6%BB%A4%E6%B3%A2"><span class="toc-number">2.</span> <span class="toc-text">2 空间上的滤波</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Spatiotemporal-Variance-Guided-Filtering-SVGF"><span class="toc-number">3.</span> <span class="toc-text">3 Spatiotemporal Variance-Guided Filtering (SVGF)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Recurrent-AutoEncoder-RAE"><span class="toc-number">4.</span> <span class="toc-text">4 Recurrent AutoEncoder (RAE)</span></a></li></ol>
-                    </div>
-                </span>
-            </div>
-        </div>
-         -->
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
-
-  
-  
-  
-  <section id="comments" class="comments">
-    <style>
-      .comments {
-        margin: 30px;
-        padding: 30px 4% 30px 4%;
-        background: #fff
-      }
-  
-      @media screen and (max-width:800px) {
-        .comments {
-          margin: auto;
-          padding: 30px;
-          background: #fff
-        }
-      }
-    </style>
-    <div id="tcomment"></div>
-<script src="https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js"></script>
-<script>
-  twikoo.init({
-    envId: "https://proxy.cors.sh/http://124.222.177.115:8888",
-    el: '#tcomment',
-    // region: 'ap-guangzhou', // 环境地域，默认为 ap-shanghai，如果您的环境地域不是上海，需传此参数
-    // path: 'window.location.pathname', // 用于区分不同文章的自定义 js 路径，如果您的文章路径不是 location.pathname，需传此参数
-  })
-</script>
-
-  </section>
-  
-  
+    
 
 
           </div>
@@ -666,9 +249,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
