@@ -156,6 +156,110 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-记录一些个人常用的命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/01/09/%E8%AE%B0%E5%BD%95%E4%B8%80%E4%BA%9B%E4%B8%AA%E4%BA%BA%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4/">记录一些个人常用的命令</a>
+    </h1>
+  
+
+        
+        
+        
+        <a href="/2024/01/09/%E8%AE%B0%E5%BD%95%E4%B8%80%E4%BA%9B%E4%B8%AA%E4%BA%BA%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4/" class="archive-article-date">
+  	<time datetime="2024-01-09T12:03:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-01-09</time>
+</a>
+        
+      </header>
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>默认使用 WSL 1 的命令行窗口。</p>
+<h2 id="1-FFmpeg"><a href="#1-FFmpeg" class="headerlink" title="1 FFmpeg"></a>1 FFmpeg</h2><h3 id="序列帧转视频"><a href="#序列帧转视频" class="headerlink" title="序列帧转视频"></a>序列帧转视频</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg.exe -start_number xxx -framerate 30 -i &quot;%04d.png&quot; -r 30 -c:v libx264 -crf 25 output.mp4</span><br><span class="line">ffmpeg.exe -start_number xxx -framerate 30 -i &quot;%04d.png&quot; -r 30 -c:v libx264 -crf 0 -preset veryslow output.mp4</span><br></pre></td></tr></table></figure>
+<h3 id="字幕-ass-文件转-mov"><a href="#字幕-ass-文件转-mov" class="headerlink" title="字幕 ass 文件转 mov"></a>字幕 ass 文件转 mov</h3><p>需要注意更改：分辨率、结束时间、帧率</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg.exe -f lavfi -i &quot;color=color=black@0.0:size=2880x1620,format=rgba,subtitles=&lt;subtitle&gt;.ass:alpha=1&quot; -c:v png -t &quot;0:01:50.37&quot; -framerate 30 -r 30 &lt;subtitle&gt;.mov -stats</span><br></pre></td></tr></table></figure>
+<h3 id="更改图片分辨率"><a href="#更改图片分辨率" class="headerlink" title="更改图片分辨率"></a>更改图片分辨率</h3><p>假设需要将输入图片的分辨率改为1920x1080</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg.exe -i in.png -vf scale=1920:1080 -pred mixed out.png</span><br></pre></td></tr></table></figure>
+<h3 id="修改音频采样率"><a href="#修改音频采样率" class="headerlink" title="修改音频采样率"></a>修改音频采样率</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg.exe -i a.mp3 -ar 48000 output.mp3</span><br></pre></td></tr></table></figure>
+<h3 id="格式转换"><a href="#格式转换" class="headerlink" title="格式转换"></a>格式转换</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg.exe -i in.m4a out.mp3 # 音频格式转换</span><br><span class="line">ffmpeg.exe -i in.mp4 out.mp3 # 提取视频的音频</span><br><span class="line">ffmpeg.exe -i in.mkv -c:v libx264 -crf out.mp4 # 视频转mp4，x264编码</span><br></pre></td></tr></table></figure>
+        
+          <!-- <a class="article-more-a" href="/2024/01/09/%E8%AE%B0%E5%BD%95%E4%B8%80%E4%BA%9B%E4%B8%AA%E4%BA%BA%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4/#more">阅读全文 >></a> -->
+          <span class="article-more-left-link">
+          <a class="article-more-a" href="/2024/01/09/%E8%AE%B0%E5%BD%95%E4%B8%80%E4%BA%9B%E4%B8%AA%E4%BA%BA%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4/">阅读全文 >></a>
+          </span>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Windows</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">ffmpeg</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cmd</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/未归档//" class="article-tag-list-link color4">未归档</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        <!--  -->
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-WandB-本地服务器部署" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1371,158 +1475,6 @@
 
 
   
-    <article id="post-Recap of CG basics" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/03/12/Recap%20of%20CG%20basics/">GAMES202 - Recap of CG basics</a>
-    </h1>
-  
-
-        
-        
-        
-        <a href="/2022/03/12/Recap%20of%20CG%20basics/" class="archive-article-date">
-  	<time datetime="2022-03-11T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-12</time>
-</a>
-        
-      </header>
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-渲染管线"><a href="#1-渲染管线" class="headerlink" title="1 渲染管线"></a>1 渲染管线</h2><ul>
-<li>顶点处理<ul>
-<li>变换，将世界坐标中的顶点投影到屏幕空间上</li>
-</ul>
-</li>
-<li>三角形处理<ul>
-<li>顶点间的连接关系不变，在屏幕上连接三角形</li>
-</ul>
-</li>
-<li>光栅化<ul>
-<li>将三角形离散成屏幕上的像素，称为片段(fragment)</li>
-</ul>
-</li>
-<li>片段处理<ul>
-<li>片段着色、纹理映射</li>
-</ul>
-</li>
-<li>输出帧图像</li>
-</ul>
-<h2 id="2-OpenGL流程-类比于画油画"><a href="#2-OpenGL流程-类比于画油画" class="headerlink" title="2 OpenGL流程 - 类比于画油画"></a>2 OpenGL流程 - 类比于画油画</h2><ul>
-<li>放置模型<ul>
-<li>模型描述、模型变换</li>
-<li>Vertex buffer object(VBO)<ul>
-<li>一块传给GPU的buffer，存储模型的顶点、法线、纹理坐标</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>放置画架<ul>
-<li>视图变换<ul>
-<li>相机属性</li>
-</ul>
-</li>
-<li>创建framebuffer</li>
-</ul>
-</li>
-<li>将画布放在画架上<ul>
-<li>用同一个framebuffer可以输出多个不同纹理(renderTarget)<ul>
-<li>一个pass里可以输出多张结果：normal、depth等</li>
-<li>用户在fragment shader中决定输出纹理的样式</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>在画布上画画<ul>
-<li>Vertex shader<ul>
-<li>对每个顶点，顶点变换、投影、插值</li>
-</ul>
-</li>
-<li>fragment shader<ul>
-<li>对每个片段，光照、阴影、深度测试</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>可以画多次<ul>
-<li>之前的帧可以作为参考</li>
-</ul>
-</li>
-</ul>
-        
-          <!-- <a class="article-more-a" href="/2022/03/12/Recap%20of%20CG%20basics/#more">阅读全文 >></a> -->
-          <span class="article-more-left-link">
-          <a class="article-more-a" href="/2022/03/12/Recap%20of%20CG%20basics/">阅读全文 >></a>
-          </span>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GAMES202</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">实时渲染</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/图形学入门笔记//" class="article-tag-list-link color3">图形学入门笔记</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        <!--  -->
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1537,7 +1489,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2023 LumiOwO
+    		&copy; 2024 LumiOwO
     	</div>
       	<!-- <div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -9752,6 +9704,14 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">疑难杂症</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">WandB</a>
               </li>
              
@@ -9764,15 +9724,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">疑难杂症</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">分治</a>
+                <a href="javascript:void(0)" class="js-tag color5">动态规划</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -9780,7 +9732,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态规划</a>
+                <a href="javascript:void(0)" class="js-tag color3">分治</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -9792,11 +9744,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">贪心</a>
+                <a href="javascript:void(0)" class="js-tag color2">ffmpeg</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">cmd</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">近似算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">贪心</a>
               </li>
             
             <div class="clearfix"></div>
